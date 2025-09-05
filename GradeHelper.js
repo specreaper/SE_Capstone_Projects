@@ -37,13 +37,7 @@ async function saveInput() {
     		row.appendChild(nameCell);
 		
 		// File link
-		let fileUrl;
-		if (student.gitrepo.endsWith("/")) {
-  			fileUrl = student.gitrepo + fileName;
-		} else {
-  			fileUrl = student.gitrepo + "/" + fileName;
-		}
-
+		let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
     		let fileExists = false;
     		try {
       			const res = await fetch(fileUrl, { method: "HEAD" });

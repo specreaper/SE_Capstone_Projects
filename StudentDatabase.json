@@ -1,14 +1,14 @@
 [
 	{
 		"name": "Sean Evans",
-		"gitrepo": "https://specreaper.github.io"
+		"githubUSER": "specreaper"
 	},
 	{
                 "name": "Benjamin",
-                "gitrepo": "https://Penrosian.github.io"
+                "githubUSER": "Penrosian"
         },
 	{
                 "name": "Madi",
-                "gitrepo": "https://cworst.github.io"
+                "githubUSER": "cworst"
         }
 ]
