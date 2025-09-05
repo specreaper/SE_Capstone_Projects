@@ -39,7 +39,11 @@ async function saveInput() {
 		//Gitrepo link
 		let gitrepoUrl = "https://github.com/" + student.githubUSER;
 		const repoCell = document.createElement("td");
-                repoCell.textContent = gitrepoUrl;
+                const b = document.createElement("a");
+                b.href = gitrepoUrl;
+		b.textContent = gitrepoUrl;
+		b.target = "_blank";
+		repoCell.appendChild(b);
                 row.appendChild(repoCell);
 
 		// File link
