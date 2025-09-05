@@ -70,11 +70,15 @@ async function saveInput() {
 		//Commit history link
                 let commitUrl = gitrepoUrl + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
                 const commitCell = document.createElement("td");
-                const c = document.createElement("a");
-                c.href = commitUrl;
-                c.textContent = commitUrl;
-                c.target = "_blank";
-                commitCell.appendChild(c);
+                if (fileExists) {
+			const c = document.createElement("a");
+                	c.href = commitUrl;
+                	c.textContent = commitUrl;
+                	c.target = "_blank";
+                	commitCell.appendChild(c);
+		} else {
+			commitCell.textContent = "History Doesn't Exist For This File";
+		}
                 row.appendChild(commitCell);
 		
 		// Validation cell
@@ -89,7 +93,7 @@ async function saveInput() {
         			validCell.textContent = "no";
       			}
     			} else {
-      				validCell.textContent = "n/a";
+      				validCell.textContent = "N/A";
     			}
     			row.appendChild(validCell);
     			table.appendChild(row);
