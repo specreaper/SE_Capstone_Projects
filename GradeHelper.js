@@ -20,7 +20,7 @@ async function saveInput() {
 
 	// Table headers
 	const headerRow = document.createElement("tr");
-	["Student Name", "Gitrepo Link", "File Link", "Valid?"].forEach(text => {
+	["Student Name", "Gitrepo Link", "File Link", "Commit History Link", "Valid?"].forEach(text => {
     		const th = document.createElement("th");
     		th.textContent = text;
     		headerRow.appendChild(th);
@@ -66,6 +66,16 @@ async function saveInput() {
       			linkCell.textContent = "Couldn't Find File";
     		}
     		row.appendChild(linkCell);
+		
+		//Commit history link
+                let commitUrl = gitrepoUrl + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
+                const commitCell = document.createElement("td");
+                const c = document.createElement("a");
+                c.href = commitUrl;
+                c.textContent = commitUrl;
+                c.target = "_blank";
+                commitCell.appendChild(c);
+                row.appendChild(commitCell);
 		
 		// Validation cell
     		const validCell = document.createElement("td");
