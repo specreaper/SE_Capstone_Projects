@@ -20,7 +20,7 @@ async function saveInput() {
 
 	// Table headers
 	const headerRow = document.createElement("tr");
-	["Student Name", "File Link", "Valid?"].forEach(text => {
+	["Student Name", "Gitrepo Link", "File Link", "Valid?"].forEach(text => {
     		const th = document.createElement("th");
     		th.textContent = text;
     		headerRow.appendChild(th);
@@ -36,6 +36,12 @@ async function saveInput() {
     		nameCell.textContent = student.name;
     		row.appendChild(nameCell);
 		
+		//Gitrepo link
+		let gitrepoUrl = "https://github.com/" + student.githubUSER;
+		const repoCell = document.createElement("td");
+                repoCell.textContent = gitrepoUrl;
+                row.appendChild(repoCell);
+
 		// File link
 		let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
     		let fileExists = false;
