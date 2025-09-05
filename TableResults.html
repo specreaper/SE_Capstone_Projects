@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-        	<title>boxes!</title>
+        	<title>GradeHelper</title>
 		<script src="js/intit.js"></script>
+		<script src="GradeHelper.js"></script>
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<style>
 			.grid{
@@ -12,14 +13,25 @@
     				padding: 20px;
 				background-color: #f5f5f5;
 			}
+			table {
+       				 margin-top: 20px;
+        			width: 100%;
+        			border-collapse: collapse;
+      			}
+      			th, td {
+        			padding: 8px;
+        			border: 1px solid #000;
+      			}
+      			th {
+        			background-color: #ddd;
+      			}
 		</style>
 	</head>
 	<body>
 		<div class="grid">
 			<input type="text" id="userInput" placeholder="What file are you looking for?">
 			<button onclick="saveInput()">Submit</button>
-			<script src="GradeHelper.js">
-			</script>
+			<div id="results"></div>
 		</div>
 	</body>
 </html>
