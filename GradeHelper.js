@@ -50,7 +50,7 @@ async function saveInput() {
 		let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
     		let fileExists = false;
     		try {
-      			const res = await fetch(fileUrl, { method: "HEAD" });
+      			const res = await fetch(fileUrl, { method: "GET" });
       			fileExists = res.ok;
     		} catch (err) {
       			console.warn("Error checking file:", err);
@@ -68,8 +68,8 @@ async function saveInput() {
     		row.appendChild(linkCell);
 		
 		//Commit history link
-                let commitUrl = gitrepoUrl + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
-                const commitCell = document.createElement("td");
+                let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
+		const commitCell = document.createElement("td");
                 if (fileExists) {
 			const c = document.createElement("a");
                 	c.href = commitUrl;
