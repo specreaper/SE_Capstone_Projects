@@ -87,7 +87,7 @@ function saveInput() {
       			try {
         			//const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET" });
 				const validateRes = fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
-						headers: { "User-Agent": "Mozilla/5.0",  // required by W3C validator } });
+						headers: { "User-Agent": "Mozilla/5.0"} });
 				const data = validateRes.json();
         			validCell.textContent = data.messages.length === 0 ? "yes" : "no";
       			} catch (err) {
