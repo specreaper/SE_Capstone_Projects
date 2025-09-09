@@ -98,7 +98,7 @@ function saveInput() {
 				console.warn(error);
         			validCell.textContent = "no";
 			});
-    		 	else {
+    		 	.else {
       			validCell.textContent = "N/A";
 			}
     		row.appendChild(validCell);
