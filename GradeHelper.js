@@ -7,9 +7,10 @@ function saveInput() {
     		return;
   	}
 	// Load StudentDatabase.json
-	const response = fetch("StudentDatabase.json");
-	const students = response.json();
-	
+	fetch("StudentDatabase.json")
+	.then(response => response.json())
+	.then(data => {console.log(data)})
+
 	// Clear old results if table already exists
 	const resultsDiv = document.getElementById("results");
 	resultsDiv.innerHTML = "";
