@@ -85,22 +85,25 @@ function saveInput() {
 		// Validation cell
     		const validCell = document.createElement("td");
     		if (fileExists) {
-      			try {
-        			//const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET" });
-				const validateRes = fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
-						headers: { "User-Agent": "Mozilla/5.0"} });
-				const data = validateRes.json();
-        			validCell.textContent = data.messages.length === 0 ? "yes" : "no";
-      			} catch (err) {
-        			console.warn("Validation error:", err);
+			fetch("https://html5.validator.nu/?out=json&doc=", {
+				method: "POST", 
+				headers: { 
+					"Content-Type": "text/html; charset=utf-8"
+				}})
+			.then(response => response.json())
+        		.then(data => {
+            			renderValidationResults(data);
+       			})
+       			.catch(error => {
+				console.warn(error);
         			validCell.textContent = "no";
-      			}
-    			} else {
-      				validCell.textContent = "N/A";
-    			}
-    			row.appendChild(validCell);
-    			table.appendChild(row);
-	}
+			});
+    		 	else {
+      			validCell.textContent = "N/A";
+			}
+    		row.appendChild(validCell);
+    		table.appendChild(row);
+		}
 	resultsDiv.appendChild(table);
 }
 
