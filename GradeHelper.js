@@ -1,4 +1,4 @@
-async function saveInput() {
+function saveInput() {
   	// Grab the value from the text box
   	let fileName = document.getElementById("userInput").value.trim();
   	// Store in a variable
@@ -7,8 +7,8 @@ async function saveInput() {
     		return;
   	}
 	// Load StudentDatabase.json
-	const response = await fetch("StudentDatabase.json");
-	const students = await response.json();
+	const response = fetch("StudentDatabase.json");
+	const students = response.json();
 	
 	// Clear old results if table already exists
 	const resultsDiv = document.getElementById("results");
@@ -50,7 +50,7 @@ async function saveInput() {
 		let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
     		let fileExists = false;
     		try {
-      			const res = await fetch(fileUrl, { method: "GET" });
+      			const res = fetch(fileUrl, { method: "GET" });
       			fileExists = res.ok;
     		} catch (err) {
       			console.warn("Error checking file:", err);
@@ -86,9 +86,9 @@ async function saveInput() {
     		if (fileExists) {
       			try {
         			//const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET" });
-				const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
+				const validateRes = fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
 						headers: { "User-Agent": "Mozilla/5.0",  // required by W3C validator } });
-				const data = await validateRes.json();
+				const data = validateRes.json();
         			validCell.textContent = data.messages.length === 0 ? "yes" : "no";
       			} catch (err) {
         			console.warn("Validation error:", err);
