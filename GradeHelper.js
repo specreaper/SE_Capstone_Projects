@@ -86,7 +86,7 @@ async function saveInput() {
     		if (fileExists) {
       			try {
         			//const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET" });
-				const validateRes = await fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
+				const validateRes = await fetch("https://html5.validator.nu/?out=json&doc=" + encodeURIComponent(fileUrl), { method: "GET", 
 						headers: { "User-Agent": "Mozilla/5.0",  // required by W3C validator } });
 				const data = await validateRes.json();
         			validCell.textContent = data.messages.length === 0 ? "yes" : "no";
