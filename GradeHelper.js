@@ -65,22 +65,20 @@ function saveInput() {
                 }
 				row.appendChild(linkCell);
 
-			//Raw File
-			let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
-			const rawCell = document.createElement("td");
-			if (fileExists) {
+				//Raw File
+				let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
+				const rawCell = document.createElement("td");
+				if (fileExists) {
                 	const rawLink = document.createElement("a");
                 	rawLink.href = rawURL;
                 	rawLink.textContent = rawURL;
                 	rawLink.target = "_blank";
                 	rawCell.appendChild(rawLink);
             	} else {
-                	rawCell.textContent = "Raw file does not exist";
+                	rawCell.textContent = "Raw File Does Not Exist";
             	}
         		row.appendChild(rawCell);
             
-
-				
 				//Commit history link
         		let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
             	const commitCell = document.createElement("td");
@@ -94,6 +92,7 @@ function saveInput() {
                 	commitCell.textContent = "History Doesn't Exist For This File";
             	}
         		row.appendChild(commitCell);
+
 				// Validation cell
             	const validCell = document.createElement("td");
             	if (fileExists) {
