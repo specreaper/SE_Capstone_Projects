@@ -10,8 +10,7 @@ function saveInput() {
 	 // Clear old results if table already exists
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
-	
-
+		
 	// Load StudentDatabase.json
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
@@ -65,47 +64,45 @@ function saveInput() {
                     linkCell.textContent = "Couldn't Find File";
                 }
 				row.appendChild(linkCell);
+				
+				//Commit history link
+        		let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
+            	const commitCell = document.createElement("td");
+            	if (fileExists) {
+                	const commitLink = document.createElement("a");
+                	commitLink.href = commitUrl;
+                	commitLink.textContent = commitUrl;
+                	commitLink.target = "_blank";
+                	commitCell.appendChild(commitLink);
+            	} else {
+                	commitCell.textContent = "History Doesn't Exist For This File";
+            	}
+        		row.appendChild(commitCell);
+				// Validation cell
+            	const validCell = document.createElement("td");
+            	if (fileExists) {
+					try{
+						fetch("https://html5.validator.nu/?out=json&doc=", {
+							method: "POST",
+                        	headers: {"Content-Type": "text/html; charset=utf-8"}
+						})
+                    	.then(response => response.json())
+                    	.then(data => {
+							renderValidationResults(data);
+						})
+                    	.catch(error => {
+							console.warn(error);
+                    	    validCell.textContent = "no";
+                    	})
+                	}
+                	catch {
+						validCell.textContent = "N/A";
+                	}
+					row.appendChild(validCell);
+				}
 			})
 			.catch(err => console.warn("Error checking file:", err));
-            
-		
-			//Commit history link
-        	let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
-            const commitCell = document.createElement("td");
-            if (fileExists) {
-                const commitLink = document.createElement("a");
-                commitLink.href = commitUrl;
-                commitLink.textContent = commitUrl;
-                commitLink.target = "_blank";
-                commitCell.appendChild(commitLink);
-            } else {
-                commitCell.textContent = "History Doesn't Exist For This File";
-            }
-        	row.appendChild(commitCell);
-
-			// Validation cell
-            const validCell = document.createElement("td");
-            if (fileExists) {
-				try{
-					fetch("https://html5.validator.nu/?out=json&doc=", {
-						method: "POST",
-                        headers: {"Content-Type": "text/html; charset=utf-8"}
-					})
-                    .then(response => response.json())
-                    .then(data => {
-						renderValidationResults(data);
-					})
-                    .catch(error => {
-						console.warn(error);
-                        validCell.textContent = "no";
-                    })
-                }
-                catch {
-					validCell.textContent = "N/A";
-                }
-				row.appendChild(validCell);
-
-			}
+        
 			console.log(row);
             table.appendChild(row);
 		}
