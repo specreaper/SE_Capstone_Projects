@@ -10,8 +10,10 @@ function saveInput() {
 	 // Clear old results if table already exists
         const resultsDiv = document.getElementById("results");
         resultsDiv.innerHTML = "";
+	
 
 	// Load StudentDatabase.json
+	let students = [];
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
 	.then(data => {
@@ -30,6 +32,7 @@ function saveInput() {
 		
 		// Loop through each student
         	for (const student of students) {
+			students.push(student)
                 	const row = document.createElement("tr");
 
                 	// Student name
