@@ -16,7 +16,7 @@ function saveInput() {
 	let students = [];
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
-	.then(data => {
+	.then(async data => {
 		// Create a table
         	const table = document.createElement("table");
         	table.border = "1";
