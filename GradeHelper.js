@@ -16,7 +16,7 @@ function saveInput() {
 	let students = [];
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
-	.then(async data => {
+	.then(data => {
 		// Create a table
         	const table = document.createElement("table");
         	table.border = "1";
@@ -31,8 +31,7 @@ function saveInput() {
         	table.appendChild(headerRow);
 		
 		// Loop through each student
-        	for (const student of students) {
-			students.push(student)
+        	for (const student of data) {
                 	const row = document.createElement("tr");
 
                 	// Student name
