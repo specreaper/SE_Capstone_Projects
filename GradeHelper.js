@@ -53,7 +53,7 @@ function saveInput() {
                 	let fileExists = false;
                 	try {
                         	const res = fetch(fileUrl, { method: "GET" });
-                        	fileExists = res.ok;
+                        	fileExists = res.response.ok;
                 	} catch (err) {
                         	console.warn("Error checking file:", err);
                 	}
