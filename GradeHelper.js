@@ -13,7 +13,6 @@ function saveInput() {
 	
 
 	// Load StudentDatabase.json
-	let students = [];
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
 	.then(data => {
