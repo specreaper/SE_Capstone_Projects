@@ -21,7 +21,7 @@ function saveInput() {
 			
         // Table headers
         const headerRow = document.createElement("tr");
-        ["Student Name", "Gitrepo Link", "File Link", "Commit History Link", "Valid?"].forEach(text => {
+        ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link", "Valid?"].forEach(text => {
         	const th = document.createElement("th");
         	 th.textContent = text;
         	headerRow.appendChild(th);
@@ -37,7 +37,7 @@ function saveInput() {
             nameCell.textContent = student.name;
             row.appendChild(nameCell);
 		
-			//Gitrepo link
+			//Homepage
             let gitrepoUrl = "https://github.com/" + student.githubUSER;
             const repoCell = document.createElement("td");
             const repoLink = document.createElement("a");
@@ -47,7 +47,7 @@ function saveInput() {
             repoCell.appendChild(repoLink);
         	row.appendChild(repoCell);
 		
-			// File link
+			// Page Link
             let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
             let fileExists = false;
             fetch(fileUrl, { method: "GET" })
@@ -64,6 +64,22 @@ function saveInput() {
                     linkCell.textContent = "Couldn't Find File";
                 }
 				row.appendChild(linkCell);
+
+			//Raw File
+			let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
+			const rawCell = document.createElement("td");
+			if (fileExists) {
+                	const rawLink = document.createElement("a");
+                	rawLink.href = rawURL;
+                	rawLink.textContent = rawURL;
+                	rawLink.target = "_blank";
+                	rawCell.appendChild(rawLink);
+            	} else {
+                	rawCell.textContent = "Raw file does not exist";
+            	}
+        		row.appendChild(rawCell);
+            
+
 				
 				//Commit history link
         		let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
