@@ -102,12 +102,8 @@ function saveInput() {
 						})
                     	.then(response => response.json())
                     	.then(data => {
-							validCell.textContent = "Yes";
+							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
 						})
-                    	.catch(error => {
-							console.warn(error);
-                    	    validCell.textContent = "No";
-                    	})
                 	}
                 	catch {
 						validCell.textContent = "N/A";
@@ -115,8 +111,6 @@ function saveInput() {
 					row.appendChild(validCell);
 				}
 			})
-			.catch(err => console.warn("Error checking file:", err));
-        
 			console.log(row);
             table.appendChild(row);
 		}
