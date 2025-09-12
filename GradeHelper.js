@@ -97,7 +97,7 @@ function saveInput() {
             	const validCell = document.createElement("td");
             	if (fileExists) {
 					try{
-						fetch("https://html5.validator.nu/?out=json&doc=", {
+						fetch("https://html5.validator.nu/?out=json", {
 							method: "POST",
                         	headers: {"Content-Type": "text/html; charset=utf-8"}
 						})
