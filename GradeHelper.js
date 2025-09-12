@@ -98,8 +98,9 @@ function saveInput() {
             	if (fileExists) {
 					try{
 						fetch("https://html5.validator.nu/?out=json&doc=", {
-							method: "GET",
-                        	headers: {"Content-Type": "text/html; charset=utf-8"}
+							method: "POST",
+                        	headers: {"Content-Type": "text/html; charset=utf-8"},
+							body: fileUrl
 						})
                     	.then(response => response.json())
                     	.then(data => {
