@@ -97,18 +97,16 @@ function saveInput() {
             	const validCell = document.createElement("td");
             	if (fileExists) {
 					try{
-						fetch("https://html5.validator.nu/?out=json&doc=", {
-							method: "POST",
-                        	headers: {"Content-Type": "text/html; charset=utf-8"},
-							body: fileUrl
+						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
+							method: "GET",
 						})
                     	.then(response => response.json())
                     	.then(data => {
-							renderValidationResults(data);
+							validCell.textContent = "Yes";
 						})
                     	.catch(error => {
 							console.warn(error);
-                    	    validCell.textContent = "no";
+                    	    validCell.textContent = "No";
                     	})
                 	}
                 	catch {
