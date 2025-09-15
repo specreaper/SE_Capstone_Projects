@@ -97,6 +97,9 @@ function saveInput() {
             	const validCell = document.createElement("td");
             	if (fileExists) {
 					try{
+						//2025-09-15: Remove this validation call
+						//we're getting rate-limited by the validation service
+						/*
 						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
 							method: "GET",
 						})
@@ -104,6 +107,7 @@ function saveInput() {
                     	.then(data => {
 							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
 						})
+						*/
                 	}
                 	catch {
 						validCell.textContent = "N/A";
