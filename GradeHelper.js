@@ -37,49 +37,44 @@ function saveInput1() {
             nameCell.textContent = student.name;
             row.appendChild(nameCell);
 		
-			// Page Link
-            let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
-            let fileExists = false;
-            fetch(fileUrl, { method: "GET" })
-            .then(res => {
-				const fileExists = res.ok;
-				const linkCell = document.createElement("td");
-                if (fileExists) {
-                    const fileLink = document.createElement("a");
-                    fileLink.href = fileUrl;
-                    fileLink.textContent = fileUrl;
-                    fileLink.target = "_blank";
-                    linkCell.appendChild(fileLink);
-				} else {
-                    linkCell.textContent = "Couldn't Find File";
-                }
-				row.appendChild(linkCell);
+			    // Page link + Valid check
+        	const fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
 
-				// Validation cell
+        	fetch(fileUrl, { method: "HEAD" }) // HEAD is faster than GET
+          	.then(res => {
+           		const linkCell = document.createElement("td");
             	const validCell = document.createElement("td");
-            	if (fileExists) {
-					try{
-						//2025-09-15: Remove this validation call
-						//we're getting rate-limited by the validation service
-						/*
-						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
-							method: "GET",
-						})
-                    	.then(response => response.json())
-                    	.then(data => {
-							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
-						})
-						*/
-                	}
-                	catch {
-						validCell.textContent = "N/A";
-                	}
-					row.appendChild(validCell);
-				}
-			})
-			console.log(row);
-            table.appendChild(row);
-		}
+
+            	if (res.ok) {
+              		// Link cell
+              		const fileLink = document.createElement("a");
+              		fileLink.href = fileUrl;
+              		fileLink.textContent = fileUrl;
+              		fileLink.target = "_blank";
+              		linkCell.appendChild(fileLink);
+					validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
+            	} else {
+              		linkCell.textContent = "Couldn't Find File";
+            	}
+
+            		row.appendChild(linkCell);
+            		row.appendChild(validCell);
+          		})
+          	.catch(() => {
+            	const linkCell = document.createElement("td");
+            	linkCell.textContent = "Error Fetching File";
+
+            	const validCell = document.createElement("td");
+            	validCell.textContent = "N/A";
+
+            	row.appendChild(linkCell);
+            	row.appendChild(validCell);
+          	})
+          	.finally(() => {
+            	// Only append the row once it’s finished
+            	table.appendChild(row);
+          	});
+      	};
 		results1Div.appendChild(table);
 	});
 }
