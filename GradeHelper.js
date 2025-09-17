@@ -1,6 +1,6 @@
 function saveInput1() {
 	// Grab the value from the text box
-  	let fileName = document.getElementById("userInput2").value.trim();
+  	let fileName = document.getElementById("userInput1").value.trim();
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
