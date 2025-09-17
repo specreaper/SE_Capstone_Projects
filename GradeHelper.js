@@ -1,6 +1,6 @@
-function saveInput() {
+function saveInput2() {
   	// Grab the value from the text box
-  	let fileName = document.getElementById("userInput").value.trim();
+  	let fileName = document.getElementById("userInput2").value.trim();
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
@@ -118,7 +118,7 @@ function saveInput() {
 			console.log(row);
             table.appendChild(row);
 		}
-		resultsDiv.appendChild(table);
+		results2Div.appendChild(table);
 	});
 }
 
