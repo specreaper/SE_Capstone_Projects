@@ -1,3 +1,88 @@
+function saveInput1() {
+	// Grab the value from the text box
+  	let fileName = document.getElementById("userInput2").value.trim();
+  	// Store in a variable
+	if (!fileName) {
+    	alert("Please enter a file name.");
+    	return;
+  	}
+	
+	 // Clear old results if table already exists
+    const results1Div = document.getElementById("results1");
+    results1Div.innerHTML = "";
+		
+	// Load StudentDatabase.json
+	fetch("StudentDatabase.json")
+	.then(response => response.json())
+	.then(data => {
+		// Create a table
+        const table = document.createElement("table");
+        table.border = "1";
+			
+        // Table headers
+        const headerRow = document.createElement("tr");
+        ["Student Name", "Page Link", "Valid?"].forEach(text => {
+        	const th = document.createElement("th");
+        	 th.textContent = text;
+        	headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+		
+		// Loop through each student
+        for (const student of data) {
+            const row = document.createElement("tr");
+
+            // Student name
+            const nameCell = document.createElement("td");
+            nameCell.textContent = student.name;
+            row.appendChild(nameCell);
+		
+			// Page Link
+            let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
+            let fileExists = false;
+            fetch(fileUrl, { method: "GET" })
+            .then(res => {
+				const fileExists = res.ok;
+				const linkCell = document.createElement("td");
+                if (fileExists) {
+                    const fileLink = document.createElement("a");
+                    fileLink.href = fileUrl;
+                    fileLink.textContent = fileUrl;
+                    fileLink.target = "_blank";
+                    linkCell.appendChild(fileLink);
+				} else {
+                    linkCell.textContent = "Couldn't Find File";
+                }
+				row.appendChild(linkCell);
+
+				// Validation cell
+            	const validCell = document.createElement("td");
+            	if (fileExists) {
+					try{
+						//2025-09-15: Remove this validation call
+						//we're getting rate-limited by the validation service
+						/*
+						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
+							method: "GET",
+						})
+                    	.then(response => response.json())
+                    	.then(data => {
+							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
+						})
+						*/
+                	}
+                	catch {
+						validCell.textContent = "N/A";
+                	}
+					row.appendChild(validCell);
+				}
+			})
+			console.log(row);
+            table.appendChild(row);
+		}
+		results1Div.appendChild(table);
+	});
+}
 function saveInput2() {
   	// Grab the value from the text box
   	let fileName = document.getElementById("userInput2").value.trim();
@@ -21,7 +106,7 @@ function saveInput2() {
 			
         // Table headers
         const headerRow = document.createElement("tr");
-        ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link", "Valid?"].forEach(text => {
+        ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link"].forEach(text => {
         	const th = document.createElement("th");
         	 th.textContent = text;
         	headerRow.appendChild(th);
@@ -92,28 +177,6 @@ function saveInput2() {
                 	commitCell.textContent = "History Doesn't Exist For This File";
             	}
         		row.appendChild(commitCell);
-
-				// Validation cell
-            	const validCell = document.createElement("td");
-            	if (fileExists) {
-					try{
-						//2025-09-15: Remove this validation call
-						//we're getting rate-limited by the validation service
-						/*
-						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
-							method: "GET",
-						})
-                    	.then(response => response.json())
-                    	.then(data => {
-							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
-						})
-						*/
-                	}
-                	catch {
-						validCell.textContent = "N/A";
-                	}
-					row.appendChild(validCell);
-				}
 			})
 			console.log(row);
             table.appendChild(row);

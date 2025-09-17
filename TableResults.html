@@ -17,8 +17,11 @@
 		<div class="grid">
 			<p><strong>STUDENT GITHUB FILE FINDER</strong></p>
 			<input type="text" id="userInput1" placeholder="What file are you looking to validate?">
-			<button class="dropbtn">Dropdown</button>
-			<div id="results1"></div>
+			<button onclick="saveInput1()">Submit</button>
+			<select id="studentDropdown"></select>
+			<button onclick="saveInput1()">Show Validation</button>
+			<div id="results1"></div>		
+			<br>
 			<input type="text" id="userInput2" placeholder="What file are you looking for?">
 			<button onclick="saveInput2()">Submit</button>
 			<div id="results2"></div>
