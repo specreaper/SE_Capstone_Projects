@@ -1,86 +1,6 @@
-function saveInput1() {
-	// Grab the value from the text box
-  	let fileName = document.getElementById("userInput1").value.trim();
-  	// Store in a variable
-	if (!fileName) {
-    	alert("Please enter a file name.");
-    	return;
-  	}
-	
-	 // Clear old results if table already exists
-    const results1Div = document.getElementById("results1");
-    results1Div.innerHTML = "";
-		
-	// Load StudentDatabase.json
-	fetch("StudentDatabase.json")
-	.then(response => response.json())
-	.then(data => {
-		// Create a table
-        const table = document.createElement("table");
-        table.border = "1";
-			
-        // Table headers
-        const headerRow = document.createElement("tr");
-        ["Student Name", "Page Link", "Valid?"].forEach(text => {
-        	const th = document.createElement("th");
-        	 th.textContent = text;
-        	headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
-		
-		// Loop through each student
-        for (const student of data) {
-            const row = document.createElement("tr");
-
-            // Student name
-            const nameCell = document.createElement("td");
-            nameCell.textContent = student.name;
-            row.appendChild(nameCell);
-		
-			    // Page link + Valid check
-        	const fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
-
-        	fetch(fileUrl, { method: "HEAD" }) // HEAD is faster than GET
-          	.then(res => {
-           		const linkCell = document.createElement("td");
-            	const validCell = document.createElement("td");
-
-            	if (res.ok) {
-              		// Link cell
-              		const fileLink = document.createElement("a");
-              		fileLink.href = fileUrl;
-              		fileLink.textContent = fileUrl;
-              		fileLink.target = "_blank";
-              		linkCell.appendChild(fileLink);
-					validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
-            	} else {
-              		linkCell.textContent = "Couldn't Find File";
-            	}
-
-            		row.appendChild(linkCell);
-            		row.appendChild(validCell);
-          		})
-          	.catch(() => {
-            	const linkCell = document.createElement("td");
-            	linkCell.textContent = "Error Fetching File";
-
-            	const validCell = document.createElement("td");
-            	validCell.textContent = "N/A";
-
-            	row.appendChild(linkCell);
-            	row.appendChild(validCell);
-          	})
-          	.finally(() => {
-            	// Only append the row once it’s finished
-            	table.appendChild(row);
-          	});
-      	};
-		results1Div.appendChild(table);
-	});
-}
-function saveInput2() {
+function saveInput() {
   	// Grab the value from the text box
-  	let fileName = document.getElementById("userInput2").value.trim();
+  	let fileName = document.getElementById("userInput").value.trim();
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
@@ -88,8 +8,8 @@ function saveInput2() {
   	}
 	
 	 // Clear old results if table already exists
-    const results2Div = document.getElementById("results2");
-    results2Div.innerHTML = "";
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
 		
 	// Load StudentDatabase.json
 	fetch("StudentDatabase.json")
@@ -176,7 +96,7 @@ function saveInput2() {
 			console.log(row);
             table.appendChild(row);
 		}
-		results2Div.appendChild(table);
+		results1Div.appendChild(table);
 	});
 }
 
