@@ -8,8 +8,8 @@ function saveInput2() {
   	}
 	
 	 // Clear old results if table already exists
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
+    const results2Div = document.getElementById("results2");
+    results2Div.innerHTML = "";
 		
 	// Load StudentDatabase.json
 	fetch("StudentDatabase.json")
