@@ -96,7 +96,7 @@ function saveInput() {
 			console.log(row);
             table.appendChild(row);
 		}
-		results1Div.appendChild(table);
+		resultsDiv.appendChild(table);
 	});
 }
 
