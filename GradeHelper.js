@@ -109,8 +109,8 @@ function StudentWebsiteContentList() {
   	}
 	
 	// Create PDF
-	const PDF = window.jspdf;
-	const doc = new PDF();
+	const { jsPDF } = window.jspdf;
+	const doc = new jsPDF();
 
 	 // Clear old results if table already exists
     const resultsDiv = document.getElementById("results");
@@ -120,54 +120,60 @@ function StudentWebsiteContentList() {
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
 	.then(data => {
+		// Process each student sequentially
+		let chain = Promise.resolve();
 		
 		// Loop through each student
         for (const student of data) {
-			// Creating shortcuts
-			const name = student.name;
-			const githubUSER = student.githubUSER;
-			let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
+			chain = chain.then(() => {
+				// Creating shortcuts
+				let index = 0;
+				const name = student.name;
+				const githubUSER = student.githubUSER;
+				let rawUrl = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 			
-			// Adding in name on the PDF
-			doc.setFontSize(14);
-    		doc.text("Student: " + name, 10, 20);
-    		
-			// Try fetching raw file
-    		let fileContent = "";
-			let fileExists = false;
-            fetch(rawUrl, { method: "GET" })
-            .then(res => {
-				const fileExists = res.ok;
-                if (fileExists) {
-                    fileContent = res.text();
-				} else {
-                    fileContent = "Couldn't Find File";
-                }
+				// Adding in name on the PDF
+				doc.setFontSize(14);
+    			doc.text("Student: " + name, 10, 20);
+				
+				// Try fetching raw file
+    			let fileContent = "";
+            	return fetch(rawUrl, { method: "GET" })
+            	.then(res => {
+            	    if (res.ok) {
+            	        return res.text();
+					} else {
+            	        return "Couldn't Find File";
+            	    }
+				})
+				.then(fileContent => {
+					// Add raw code (split long text so it fits page)
+    				doc.setFontSize(10);
+    				const pageWidth = doc.internal.pageSize.getWidth() - 80;
+    				const lines = doc.splitTextToSize(fileContent, pageWidth);
+    				doc.text(lines, 40, 70);
+
+					// Page break unless last student
+    				if (index < data.length - 1) {
+    					doc.addPage();
+						index++;
+					}
+				})
 			})
-
-    		// Add raw code (split long text so it fits page)
-    		doc.setFontSize(10);
-    		const pageWidth = doc.internal.pageSize.getWidth() - 80;
-    		const lines = doc.splitTextToSize(fileContent, pageWidth);
-    		doc.text(lines, 40, 70);
-
-			// Page break unless last student
-    		if (i < data.length - 1) {
-      			doc.addPage();
-    		}
 		}
-		// Make the PDF downloadable
-  		const pdfBlob = doc.output("blob");
-  		const url = URL.createObjectURL(pdfBlob);
+		// After all students processed then makes the PDF
+		chain.then(() => {
+			const pdfBlob = doc.output("blob");
+			const url = URL.createObjectURL(pdfBlob);
+			const linkDiv = document.getElementById("downloadLink");
+			linkDiv.innerHTML = ""; // clear old link
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "StudentFiles_" + fileName + ".pdf";
+			a.textContent = "Download PDF";
+			linkDiv.appendChild(a);
 
-  		const linkDiv = document.getElementById("downloadLink");
-  		linkDiv.innerHTML = ""; // clear old link
-  		const a = document.createElement("a");
-  		a.href = url;
-  		a.download = "StudentFiles_" + fileName + ".pdf";
-  		a.textContent = "Download PDF";
-  		linkDiv.appendChild(a);
-
-  		resultsDiv.innerHTML = "PDF with raw file content ready!";
+			resultsDiv.innerHTML = "PDF with raw file content ready!";
+		});
 	});
 }

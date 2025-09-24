@@ -8,6 +8,12 @@ p, ul, li{
 	text-align: center;
 	font-size: 120%;
 }
+a {
+	font-family: "Times New Roman", serif;
+	margin: auto 10px;
+	text-align: center;
+	font-size: 110%;
+}
 table {
 	margin-top: 20px;
 	width: 90%;
