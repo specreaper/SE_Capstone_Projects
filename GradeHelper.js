@@ -139,11 +139,11 @@ function StudentWebsiteContentList() {
             .then(res => {
 				const fileExists = res.ok;
                 if (fileExists) {
-                    fileContent = await res.text();
+                    fileContent = res.text();
 				} else {
                     fileContent = "Couldn't Find File";
                 }
-			}
+			})
 
     		// Add raw code (split long text so it fits page)
     		doc.setFontSize(10);
@@ -164,7 +164,7 @@ function StudentWebsiteContentList() {
   		linkDiv.innerHTML = ""; // clear old link
   		const a = document.createElement("a");
   		a.href = url;
-  		a.download = `StudentFiles_${fileName}.pdf`;
+  		a.download = "StudentFiles_" + fileName + ".pdf";
   		a.textContent = "Download PDF";
   		linkDiv.appendChild(a);
 
