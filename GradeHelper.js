@@ -148,7 +148,7 @@ function StudentWebsiteContentList() {
 				})
 				.then(fileContent => {
 					// Add raw code (split long text so it fits page)
-    				doc.setFontSize(10);
+    				doc.setFontSize(12);
     				const pageWidth = doc.internal.pageSize.getWidth() - 80;
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
     				doc.text(lines, 40, 70);
