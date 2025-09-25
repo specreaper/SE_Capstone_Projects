@@ -110,7 +110,11 @@ function StudentWebsiteContentList() {
 	
 	// Create PDF
 	const { jsPDF } = window.jspdf;
-	const doc = new jsPDF();
+	const doc = new jsPDF({
+		orientation: "portrait",
+		format: [203, 267]
+	});
+	doc.setFont('Courier', 'normal');
 
 	 // Clear old results if table already exists
     const resultsDiv = document.getElementById("results");
@@ -147,28 +151,37 @@ function StudentWebsiteContentList() {
             	    }
 				})
 				.then(fileContent => {
-					// Set up variables
-					doc.setFontSize(12);
+					// Set up variables (mm)
+					doc.setFontSize(8);
+					const marginLeft = 30;
+					const marginTop = 30;
+
+					//calculate document margins
     				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
-    				const pageWidth = doc.internal.pageSize.getWidth() - 60; 
-    				const marginLeft = 30;
-    				let y = 30; // starting Y position
+					const pageWidth = doc.internal.pageSize.getWidth() - (marginLeft*2);
+					console.log(`Total page Size: ${doc.internal.pageSize.getWidth()}`);
+					console.log(`     minus margins: ${marginLeft} on each side`); 
+					console.log(`     so usable space is: ${pageWidth}`); 
+    				let y = marginTop; // starting Y position
+
+					fileContent.replace(/\t/g, '    ');
 
     				// Split the content into wrapped lines
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
 
     				// Write line by line
     				lines.forEach(line => {
+						console.log(` writing line of length: ${line.length}`);
 						// Checks for if the text is too close to bottom
-        				if (y > pageHeight - 20) { 
+        				if (y > pageHeight - (2*marginTop)) { 
 							// creates new page and resets Y for new page
 							doc.addPage();
-            				y = 20;  
+            				y = marginTop;  
         				}
 						// prints out single line and moves down for line spacing
         				doc.text(line, marginLeft, y);
         				y += 7;  
-    				})
+    				});
 
     			 	//Page break unless last student
     				if (index < data.length - 1) {
