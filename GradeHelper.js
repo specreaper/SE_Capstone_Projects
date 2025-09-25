@@ -147,17 +147,34 @@ function StudentWebsiteContentList() {
             	    }
 				})
 				.then(fileContent => {
-					// Add raw code (split long text so it fits page)
-    				doc.setFontSize(12);
-    				const pageWidth = doc.internal.pageSize.getWidth() - 80;
-    				const lines = doc.splitTextToSize(fileContent, pageWidth);
-    				doc.text(lines, 30, 30);
+					// Set up variables
+					doc.setFontSize(12);
+    				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
+    				const pageWidth = doc.internal.pageSize.getWidth() - 20; 
+    				const marginLeft = 30;
+    				let y = 40; // starting Y position
 
-					// Page break unless last student
+    				// Split the content into wrapped lines
+    				const lines = doc.splitTextToSize(fileContent, pageWidth);
+
+    				// Write line by line
+    				lines.forEach(line => {
+						// Checks for if the text is too close to bottom
+        				if (y > pageHeight - 20) { 
+							// creates new page and resets Y for new page
+							doc.addPage();
+            				y = 30;  
+        				}
+						// prints out single line and moves down for line spacing
+        				doc.text(line, marginLeft, y);
+        				y += 7;  
+    				})
+
+    			 	//Page break unless last student
     				if (index < data.length - 1) {
     					doc.addPage();
 						index++;
-					}
+					}		
 				})
 			})
 		}
