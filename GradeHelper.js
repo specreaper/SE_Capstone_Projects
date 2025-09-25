@@ -163,8 +163,25 @@ function StudentWebsiteContentList() {
 					console.log(`     minus margins: ${marginLeft} on each side`); 
 					console.log(`     so usable space is: ${pageWidth}`); 
     				let y = marginTop; // starting Y position
+					
+					// Replace tabs with spaces for all files
+    				fileContent = fileContent.replace(/\t/g, "    ");
 
-					fileContent = fileContent.replace(/\t/g, '    ');
+    				// Get file extension
+    				const ext = fileName.split(".").pop().toLowerCase();
+
+    				if (["js", "ts", "java", "c", "cpp"].includes(ext)) {
+        				// Remove single-line and block comments
+        				fileContent = fileContent
+            			.replace(/\/\/.*$/gm, "")
+            			.replace(/\/\*[\s\S]*?\*\//g, "");
+    				} else if (["html", "htm"].includes(ext)) {
+        				// Strip HTML comments
+        				fileContent = fileContent.replace(/<!--[\s\S]*?-->/g, "");
+    				} else if (["css"].includes(ext)) {
+        				// Remove CSS comments
+        				fileContent = fileContent.replace(/\/\*[\s\S]*?\*\//g, "");
+    				}
 
     				// Split the content into wrapped lines
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
