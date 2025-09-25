@@ -92,7 +92,7 @@ function StudentLinkTable() {
                 	commitCell.textContent = "History Doesn't Exist For This File";
             	}
         		row.appendChild(commitCell);
-			})
+			});
 			console.log(row);
             table.appendChild(row);
 		}
@@ -188,8 +188,8 @@ function StudentWebsiteContentList() {
     					doc.addPage();
 						index++;
 					}		
-				})
-			})
+				});
+			});
 		}
 		// After all students processed then makes the PDF
 		chain.then(() => {
@@ -206,4 +206,4 @@ function StudentWebsiteContentList() {
 			resultsDiv.innerHTML = "PDF with raw file content ready!";
 		});
 	});
-}
+};
