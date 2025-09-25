@@ -112,7 +112,7 @@ function StudentWebsiteContentList() {
 	const { jsPDF } = window.jspdf;
 	const doc = new jsPDF({
 		orientation: "portrait",
-		format: [203, 267]
+		format: [216, 279]
 	});
 	doc.setFont('Courier', 'normal');
 
@@ -164,10 +164,11 @@ function StudentWebsiteContentList() {
 					console.log(`     so usable space is: ${pageWidth}`); 
     				let y = marginTop; // starting Y position
 
-					fileContent.replace(/\t/g, '    ');
+					fileContent = fileContent.replace(/\t/g, '    ');
 
     				// Split the content into wrapped lines
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
+					//const lines = doc.splitTextToSize(fileContent, doc.internal.getFont().metadata['Unicode'].widths[0] * 80);
 
     				// Write line by line
     				lines.forEach(line => {
