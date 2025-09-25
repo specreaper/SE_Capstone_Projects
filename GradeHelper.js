@@ -134,7 +134,7 @@ function StudentWebsiteContentList() {
 			
 				// Adding in name on the PDF
 				doc.setFontSize(14);
-    			doc.text("Student: " + name, 10, 20);
+    			doc.text("Student: " + name, 10, 15);
 				
 				// Try fetching raw file
     			let fileContent = "";
@@ -150,9 +150,9 @@ function StudentWebsiteContentList() {
 					// Set up variables
 					doc.setFontSize(12);
     				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
-    				const pageWidth = doc.internal.pageSize.getWidth() - 20; 
+    				const pageWidth = doc.internal.pageSize.getWidth() - 60; 
     				const marginLeft = 30;
-    				let y = 40; // starting Y position
+    				let y = 30; // starting Y position
 
     				// Split the content into wrapped lines
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
@@ -163,7 +163,7 @@ function StudentWebsiteContentList() {
         				if (y > pageHeight - 20) { 
 							// creates new page and resets Y for new page
 							doc.addPage();
-            				y = 30;  
+            				y = 20;  
         				}
 						// prints out single line and moves down for line spacing
         				doc.text(line, marginLeft, y);
