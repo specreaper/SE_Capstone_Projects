@@ -151,7 +151,7 @@ function StudentWebsiteContentList() {
     				doc.setFontSize(12);
     				const pageWidth = doc.internal.pageSize.getWidth() - 80;
     				const lines = doc.splitTextToSize(fileContent, pageWidth);
-    				doc.text(lines, 40, 70);
+    				doc.text(lines, 30, 30);
 
 					// Page break unless last student
     				if (index < data.length - 1) {
