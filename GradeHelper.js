@@ -99,6 +99,29 @@ function StudentLinkTable() {
 		resultsDiv.appendChild(table);
 	});
 }
+function splitAt80(text) {
+	// when we render the text in the PDF, we want to wrap at 80 characters.
+	// this is an alternative to jsPDF's splitTextToSize, which calculates 
+	// wrap based on the page's size in mm and the font's width/kerning tables.
+	// This version is way simpler, and relies on using monospace font.
+	// and I'll manually calibrate font size and margin to make sure that
+	// 80 characters fits in the PDF.
+  const result = [];
+  const lines = text.split(/\r?\n/); // preserve existing line breaks
+
+  for (const line of lines) {
+    if (line.length <= 80) {
+      result.push(line);
+    } else {
+      // Wrap this line into 80-char chunks
+      const chunks = line.match(/.{1,80}/g) || [];
+      result.push(...chunks);
+    }
+  }
+
+  return result;
+}
+
 function StudentWebsiteContentList() {
   	// Grab the value from the text box
   	let fileName = document.getElementById("userInput").value.trim();
@@ -152,16 +175,16 @@ function StudentWebsiteContentList() {
 				})
 				.then(fileContent => {
 					// Set up variables (mm)
-					doc.setFontSize(8);
-					const marginLeft = 30;
+					doc.setFontSize(10);
+					const marginLeft = 20;
 					const marginTop = 30;
 
 					//calculate document margins
     				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
-					const pageWidth = doc.internal.pageSize.getWidth() - (marginLeft*2);
-					console.log(`Total page Size: ${doc.internal.pageSize.getWidth()}`);
-					console.log(`     minus margins: ${marginLeft} on each side`); 
-					console.log(`     so usable space is: ${pageWidth}`); 
+					
+					//this this only necessary if we use splitTextToSize
+					// which is also commented out below
+					//const pageWidth = doc.internal.pageSize.getWidth() - (marginLeft*2);
     				let y = marginTop; // starting Y position
 					
 					// Replace tabs with spaces for all files
@@ -173,23 +196,26 @@ function StudentWebsiteContentList() {
     				if (["js", "ts", "java", "c", "cpp"].includes(ext)) {
         				// Remove single-line and block comments
         				fileContent = fileContent
-            			.replace(/\/\/.*$/gm, "")
-            			.replace(/\/\*[\s\S]*?\*\//g, "");
+            			.replace(/\/\/.*$/gm, "//COMMENT HIDDEN")
+            			.replace(/\/\*[\s\S]*?\*\//g, "/* COMMENT HIDDEN */");
     				} else if (["html", "htm"].includes(ext)) {
         				// Strip HTML comments
-        				fileContent = fileContent.replace(/<!--[\s\S]*?-->/g, "");
+        				fileContent = fileContent.replace(/<!--[\s\S]*?-->/g
+							, "<!-- COMMENT HIDDEN -->");
     				} else if (["css"].includes(ext)) {
         				// Remove CSS comments
-        				fileContent = fileContent.replace(/\/\*[\s\S]*?\*\//g, "");
+        				fileContent = fileContent.replace(/\/\*[\s\S]*?\*\//g
+							, "/* COMMENT HIDDEN */");
     				}
 
     				// Split the content into wrapped lines
-    				const lines = doc.splitTextToSize(fileContent, pageWidth);
-					//const lines = doc.splitTextToSize(fileContent, doc.internal.getFont().metadata['Unicode'].widths[0] * 80);
+    				//const lines = doc.splitTextToSize(fileContent, pageWidth);
+					
+					const lines = splitAt80(fileContent);
+
 
     				// Write line by line
     				lines.forEach(line => {
-						console.log(` writing line of length: ${line.length}`);
 						// Checks for if the text is too close to bottom
         				if (y > pageHeight - (2*marginTop)) { 
 							// creates new page and resets Y for new page
