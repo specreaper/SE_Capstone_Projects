@@ -21,7 +21,7 @@ function StudentLinkTable() {
 			
         // Table headers
         const headerRow = document.createElement("tr");
-        ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link"].forEach(text => {
+        ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link", "Valid?"].forEach(text => {
         	const th = document.createElement("th");
         	 th.textContent = text;
         	headerRow.appendChild(th);
@@ -29,7 +29,9 @@ function StudentLinkTable() {
         table.appendChild(headerRow);
 		
 		// Loop through each student
-        for (const student of data) {
+		
+        data.forEach((student,index) => {
+			const delay = index * 5000;
             const row = document.createElement("tr");
 
             // Student name
@@ -92,10 +94,33 @@ function StudentLinkTable() {
                 	commitCell.textContent = "History Doesn't Exist For This File";
             	}
         		row.appendChild(commitCell);
+
+				// Validation cell
+				setTimeout(() => {
+            	const validCell = document.createElement("td");
+            	if (fileExists) {
+					try{
+						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
+							method: "GET",
+						})
+                    	.then(response => response.json())
+                    	.then(data => {
+							validCell.textContent = data.messages.length === 0 ? "Yes" : "No";
+						})
+                	}
+                	catch {
+						validCell.textContent = "N/A";
+                	}
+					row.appendChild(validCell);
+				}
+				},delay);
+				console.log(`Will validate ${student.name} in ${delay} ms`);
+			
 			});
-			console.log(row);
+			//console.log(row);
+			
             table.appendChild(row);
-		}
+		});
 		resultsDiv.appendChild(table);
 	});
 }
