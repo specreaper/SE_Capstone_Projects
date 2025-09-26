@@ -15,11 +15,11 @@ function StudentLinkTable() {
 	fetch("StudentDatabase.json")
 	.then(response => response.json())
 	.then(data => {
-		// Create a table
+		// Creates a table
         const table = document.createElement("table");
         table.border = "1";
 			
-        // Table headers
+        // Creates table headers
         const headerRow = document.createElement("tr");
         ["Student Name", "Homepage", "Page Link", "Raw File", "Commit History Link", "Valid?"].forEach(text => {
         	const th = document.createElement("th");
@@ -28,18 +28,20 @@ function StudentLinkTable() {
         });
         table.appendChild(headerRow);
 		
-		// Loop through each student
-		
+		// Loops through each student
         data.forEach((student,index) => {
+			const row = document.createElement("tr");
+			//Creates a delay
 			const delay = index * 5000;
-            const row = document.createElement("tr");
+            
 
-            // Student name
+            // Grabs Student names from the json file and put them in the table
             const nameCell = document.createElement("td");
             nameCell.textContent = student.name;
             row.appendChild(nameCell);
 		
-			//Homepage
+			// Grabs Students github usernames from the json file 
+			// Then creates a github homepage link with it and puts it in the table
             let gitrepoUrl = "https://github.com/" + student.githubUSER;
             const repoCell = document.createElement("td");
             const repoLink = document.createElement("a");
@@ -49,13 +51,16 @@ function StudentLinkTable() {
             repoCell.appendChild(repoLink);
         	row.appendChild(repoCell);
 		
-			// Page Link
+			// Grabs Students github usernames from the json file
+			// Also grabs the file name from the input in the website
+			// Then creates a link to the website you are looking for and puts it in the table
             let fileUrl = "https://" + student.githubUSER + ".github.io/" + fileName;
             let fileExists = false;
             fetch(fileUrl, { method: "GET" })
             .then(res => {
 				const fileExists = res.ok;
 				const linkCell = document.createElement("td");
+				// Checks for if the file exsists
                 if (fileExists) {
                     const fileLink = document.createElement("a");
                     fileLink.href = fileUrl;
@@ -67,9 +72,12 @@ function StudentLinkTable() {
                 }
 				row.appendChild(linkCell);
 
-				//Raw File
+				// Grabs Students github usernames from the json file
+				// Also grabs the file name from the input in the website
+				// Then creates a link to the raw code you are looking for and puts it in the table
 				let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 				const rawCell = document.createElement("td");
+				// Checks for if the file exsists
 				if (fileExists) {
                 	const rawLink = document.createElement("a");
                 	rawLink.href = rawURL;
@@ -81,10 +89,13 @@ function StudentLinkTable() {
             	}
         		row.appendChild(rawCell);
             
-				//Commit history link
+				// Grabs Students github usernames from the json file
+				// Also grabs the file name from the input in the website
+				// Then creates a link to the history of the code you are looking for and puts it in the table
         		let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
             	const commitCell = document.createElement("td");
-            	if (fileExists) {
+            	// Checks for if the file exsists
+				if (fileExists) {
                 	const commitLink = document.createElement("a");
                 	commitLink.href = commitUrl;
                 	commitLink.textContent = commitUrl;
@@ -95,10 +106,15 @@ function StudentLinkTable() {
             	}
         		row.appendChild(commitCell);
 
-				// Validation cell
+				// Grabs Students github usernames from the json file
+				// Also grabs the file name from the input in the website
+				// Then creates a link to the website you are looking for 
+				// Next it puts that website through a validator 
+				// Finally it puts in the table whether the website is valid or not 
 				setTimeout(() => {
             	const validCell = document.createElement("td");
-            	if (fileExists) {
+            	// Checks for if the file exsists
+				if (fileExists) {
 					try{
 						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
 							method: "GET",
@@ -115,12 +131,10 @@ function StudentLinkTable() {
 				}
 				},delay);
 				console.log(`Will validate ${student.name} in ${delay} ms`);
-			
 			});
-			//console.log(row);
-			
             table.appendChild(row);
 		});
+		//uploads table
 		resultsDiv.appendChild(table);
 	});
 }
@@ -199,10 +213,11 @@ function StudentWebsiteContentList() {
             	    }
 				})
 				.then(fileContent => {
-					// Set up variables (mm)
+					// Sets up variables 
 					doc.setFontSize(10);
 					const marginLeft = 20;
 					const marginTop = 30;
+					let y = marginTop; 
 
 					//calculate document margins
     				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
@@ -210,8 +225,7 @@ function StudentWebsiteContentList() {
 					//this this only necessary if we use splitTextToSize
 					// which is also commented out below
 					//const pageWidth = doc.internal.pageSize.getWidth() - (marginLeft*2);
-    				let y = marginTop; // starting Y position
-					
+    				
 					// Replace tabs with spaces for all files
     				fileContent = fileContent.replace(/\t/g, "    ");
 
@@ -238,8 +252,7 @@ function StudentWebsiteContentList() {
 					
 					const lines = splitAt80(fileContent);
 
-
-    				// Write line by line
+    				// Writing text line by line
     				lines.forEach(line => {
 						// Checks for if the text is too close to bottom
         				if (y > pageHeight - (2*marginTop)) { 
