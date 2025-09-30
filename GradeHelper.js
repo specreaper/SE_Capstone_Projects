@@ -186,7 +186,8 @@ function StudentWebsiteContentList() {
 			
 				// Adding in name on the PDF
 				doc.setFontSize(14);
-    			doc.text("Student: " + name, 10, 15);
+    			doc.text(name + " | " + fileName + " | Page 1", 10, 15);
+				let pageNum = 1;
 				
 				// Try fetching raw file
     			let fileContent = "";
@@ -241,15 +242,19 @@ function StudentWebsiteContentList() {
 
     				// Write line by line
     				lines.forEach(line => {
-						// Checks for if the text is too close to bottom
-        				if (y > pageHeight - (2*marginTop)) { 
-							// creates new page and resets Y for new page
-							doc.addPage();
-            				y = marginTop;  
-        				}
-						// prints out single line and moves down for line spacing
-        				doc.text(line, marginLeft, y);
-        				y += 7;  
+						if (line.length > 0){
+							// Checks for if the text is too close to bottom
+							if (y > pageHeight - (2*marginTop)) { 
+								// creates new page and resets Y for new page
+								doc.addPage();
+								y = marginTop; 
+								pageNum++;
+								doc.text(name + " | " + fileName + " | Page " + pageNum, 10, 15);
+							}
+							// prints out single line and moves down for line spacing
+							doc.text(line, marginLeft, y);
+							y += 7;  
+						}
     				});
 
     			 	//Page break unless last student
