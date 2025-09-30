@@ -194,14 +194,14 @@ function StudentWebsiteContentList() {
 			chain = chain.then(() => {
 				// Creating shortcuts
 				let index = 0;
+				let pageNum = 1;
 				const name = student.name;
 				const githubUSER = student.githubUSER;
 				let rawUrl = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 			
 				// Adding in name on the PDF
 				doc.setFontSize(14);
-    			doc.text(name + " | " + fileName + " | Page 1", 10, 15);
-				let pageNum = 1;
+    			doc.text(name + " | " + fileName + " | Page " + pageNum, 10, 15);
 				
 				// Try fetching raw file
     			let fileContent = "";
