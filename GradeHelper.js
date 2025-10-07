@@ -75,7 +75,8 @@ function StudentLinkTable() {
 				// Grabs Students github usernames from the json file
 				// Also grabs the file name from the input in the website
 				// Then creates a link to the raw code you are looking for and puts it in the table
-				let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
+				let rawURL = "https://raw.githubusercontent.com/" + student.githubUSER + 
+				"/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 				const rawCell = document.createElement("td");
 				// Checks for if the file exsists
 				if (fileExists) {
@@ -92,7 +93,8 @@ function StudentLinkTable() {
 				// Grabs Students github usernames from the json file
 				// Also grabs the file name from the input in the website
 				// Then creates a link to the history of the code you are looking for and puts it in the table
-        		let commitUrl = "https://github.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/commits/main/" + fileName;
+        		let commitUrl = "https://github.com/" + student.githubUSER + 
+				"/" + student.githubUSER + ".github.io/commits/main/" + fileName;
             	const commitCell = document.createElement("td");
             	// Checks for if the file exsists
 				if (fileExists) {
@@ -197,23 +199,38 @@ function StudentWebsiteContentList() {
 				let pageNum = 1;
 				const name = student.name;
 				const githubUSER = student.githubUSER;
-				let rawUrl = "https://raw.githubusercontent.com/" + student.githubUSER + "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
-			
-				// Adding in name on the PDF
-				doc.setFontSize(14);
-    			doc.text(name + " | " + fileName + " | Page " + pageNum, 10, 15);
-				
-				// Try fetching raw file
-    			let fileContent = "";
-            	return fetch(rawUrl, { method: "GET" })
-            	.then(res => {
-            	    if (res.ok) {
-            	        return res.text();
+				let rawUrl = "https://raw.githubusercontent.com/" + student.githubUSER 
+				+ "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
+				let commitUrl = "https://api.github.com/repos/" + student.githubUSER 
+				+ "/" + student.githubUSER + ".github.io/commits?sha=main&per_page=100";
+				let commitLength = 0;
+
+				// Gets how many commits were made
+      			return fetch(commitUrl)
+				.then(res => {
+					if (!res.ok) {
+						console.warn("Couldn't fetch commits for" + student.githubUSER);
+						return [];
+					}
+					return res.json();
+				})
+				.then( commits => {
+					commitLength = commits.length
+					// Gets raw file
+					return fetch(rawUrl);
+				})
+				.then(res => {
+					if (res.ok) {
+						return res.text();
 					} else {
-            	        return "Couldn't Find File";
-            	    }
+						return "Couldn't Find File";
+					}
 				})
 				.then(fileContent => {
+					// Adding in name on the PDF
+					doc.setFontSize(14);
+    				doc.text(name + " | " + fileName + " | Commits Made: " + commitLength + " | Page " + pageNum, 10, 15);
+
 					// Sets up variables 
 					doc.setFontSize(10);
 					const marginLeft = 20;
@@ -262,7 +279,7 @@ function StudentWebsiteContentList() {
 								doc.addPage();
 								y = marginTop; 
 								pageNum++;
-								doc.text(name + " | " + fileName + " | Page " + pageNum, 10, 15);
+								doc.text(name + " | " + fileName + " | Commits Made: " + commitLength + " | Page " + pageNum, 10, 15);
 							}
 							// prints out single line and moves down for line spacing
 							doc.text(line, marginLeft, y);
