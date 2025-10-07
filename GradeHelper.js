@@ -202,7 +202,7 @@ function StudentWebsiteContentList() {
 				let rawUrl = "https://raw.githubusercontent.com/" + student.githubUSER 
 				+ "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 				let commitUrl = "https://api.github.com/repos/" + student.githubUSER 
-				+ "/" + student.githubUSER + ".github.io/commits?path=" + fileName + "sha=main&per_page=100";
+				+ "/" + student.githubUSER + ".github.io/commits?path=" + fileName + "&sha=main&per_page=100";
 				let commitLength = 0;
 
 				// Gets how many commits were made
