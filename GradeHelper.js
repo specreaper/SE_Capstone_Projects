@@ -165,7 +165,8 @@ function splitAt80(text) {
 
 function StudentWebsiteContentList() {
   	// Grab the value from the text box
-  	let fileName = document.getElementById("userInput").value.trim();
+  	let fileName = document.getElementById("userInput1").value.trim();
+	let githubToken = document.getElementById("userInput2").value.trim();
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
@@ -203,10 +204,14 @@ function StudentWebsiteContentList() {
 				+ "/" + student.githubUSER + ".github.io/refs/heads/main/" + fileName;
 				let commitUrl = "https://api.github.com/repos/" + student.githubUSER 
 				+ "/" + student.githubUSER + ".github.io/commits?path=" + fileName + "&sha=main&per_page=100";
-				let commitLength = 0;
+				let commitLength = "N/A";
 
-				// Gets how many commits were made
-      			return fetch(commitUrl)
+				// Gets how many commits were made using the github token provided
+      			return fetch(commitUrl, {
+					headers: {
+						"Authorization": "token" + githubToken
+					}
+				})
 				.then(res => {
 					if (!res.ok) {
 						console.warn("Couldn't fetch commits for" + student.githubUSER);
@@ -216,6 +221,10 @@ function StudentWebsiteContentList() {
 				})
 				.then( commits => {
 					commitLength = commits.length
+					// Checks for if it could find any commits
+					if (commitLength == 0) {
+						commitLength = "N/A"
+					}
 					// Gets raw file
 					return fetch(rawUrl);
 				})
