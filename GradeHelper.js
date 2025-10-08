@@ -245,6 +245,7 @@ function StudentWebsiteContentList() {
 					doc.setFontSize(10);
 					const marginLeft = 20;
 					const marginTop = 30;
+					const marginBottom = 10;
 					let y = marginTop; 
 
 					//calculate document margins
@@ -284,7 +285,7 @@ function StudentWebsiteContentList() {
     				lines.forEach(line => {
 						if (line.length > 0){
 							// Checks for if the text is too close to bottom
-							if (y > pageHeight - (2*marginTop)) { 
+							if (y > pageHeight - (marginBottom)) { 
 								// creates new page and resets Y for new page
 								doc.addPage();
 								y = marginTop; 
