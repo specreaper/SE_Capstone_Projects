@@ -209,7 +209,7 @@ function StudentWebsiteContentList() {
 				// Gets how many commits were made using the github token provided
       			return fetch(commitUrl, {
 					headers: {
-						"Authorization": "token" + githubToken
+						"Authorization": "token " + githubToken
 					}
 				})
 				.then(res => {
@@ -238,7 +238,8 @@ function StudentWebsiteContentList() {
 				.then(fileContent => {
 					// Adding in name on the PDF
 					doc.setFontSize(14);
-    				doc.text(name + " | " + fileName + " | Commits Made: " + commitLength + " | Page " + pageNum, 10, 15);
+    				doc.text(name + " | " + fileName, 10, 15);
+    				doc.text("Commits Made: " + commitLength + " | Page " + pageNum, 10, 20);
 
 					// Sets up variables 
 					doc.setFontSize(10);
@@ -288,7 +289,10 @@ function StudentWebsiteContentList() {
 								doc.addPage();
 								y = marginTop; 
 								pageNum++;
-								doc.text(name + " | " + fileName + " | Commits Made: " + commitLength + " | Page " + pageNum, 10, 15);
+								doc.setFontSize(14);
+								doc.text(name + " | " + fileName, 10, 15);
+								doc.text("Commits Made: " + commitLength + " | Page " + pageNum, 10, 20);
+								doc.setFontSize(10);
 							}
 							// prints out single line and moves down for line spacing
 							doc.text(line, marginLeft, y);
