@@ -184,6 +184,8 @@ function StudentWebsiteContentList() {
 	 // Clear old results if table already exists
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
+
+	const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 		
 	// Load StudentDatabase.json
 	fetch("StudentDatabase.json")
@@ -205,6 +207,8 @@ function StudentWebsiteContentList() {
 				let commitUrl = "https://api.github.com/repos/" + student.githubUSER 
 				+ "/" + student.githubUSER + ".github.io/commits?path=" + fileName + "&sha=main&per_page=100";
 				let commitLength = "N/A";
+				let lastCommit = "N/A"
+				
 
 				// Gets how many commits were made using the github token provided
       			return fetch(commitUrl, {
@@ -220,10 +224,18 @@ function StudentWebsiteContentList() {
 					return res.json();
 				})
 				.then( commits => {
-					commitLength = commits.length
-					// Checks for if it could find any commits
-					if (commitLength == 0) {
-						commitLength = "N/A"
+					if(commits.length > 0){
+						commitLength = commits.length;
+						const lastCommitDate = new Date(commits[0].commit.committer.date);
+  
+						const day = lastCommitDate.getDate();
+						const month = monthNames[lastCommitDate.getMonth()]; // Months are 0-indexed
+						const year = lastCommitDate.getFullYear();
+						const hours = lastCommitDate.getHours();
+						const minutes = lastCommitDate.getMinutes().toString().padStart(2, '0');
+
+  						lastCommit = `${month} ${day}, ${year} ${hours}:${minutes}`;
+
 					}
 					// Gets raw file
 					return fetch(rawUrl);
@@ -237,9 +249,18 @@ function StudentWebsiteContentList() {
 				})
 				.then(fileContent => {
 					// Adding in name on the PDF
+					var currentdate = new Date(); 
+					var datetime =   
+									monthNames[currentdate.getMonth()]  + " "
+									+ currentdate.getDate() + ", "
+									+ currentdate.getFullYear() + " "  
+									+ currentdate.getHours() + ":"  
+									+ currentdate.getMinutes();
+
 					doc.setFontSize(14);
-    				doc.text(name + " | " + fileName, 10, 15);
-    				doc.text("Commits Made: " + commitLength + " | Page " + pageNum, 10, 20);
+    				doc.text(name + " | " + fileName + " | Retrieved: " + datetime, 10, 15);
+    				doc.text("Number of Commits: " + commitLength + " | Last Commit: " 
+						+ lastCommit , 10, 20);
 
 					// Sets up variables 
 					doc.setFontSize(10);
@@ -292,7 +313,7 @@ function StudentWebsiteContentList() {
 								pageNum++;
 								doc.setFontSize(14);
 								doc.text(name + " | " + fileName, 10, 15);
-								doc.text("Commits Made: " + commitLength + " | Page " + pageNum, 10, 20);
+								doc.text("Page " + pageNum, 10, 20);
 								doc.setFontSize(10);
 							}
 							// prints out single line and moves down for line spacing
