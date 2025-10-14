@@ -323,10 +323,10 @@ function StudentWebsiteContentList() {
     				});
 
 					//Checks if student had a odd number of pages
-					//If so it adds a blank page
+					//If so it adds a mostly blank page 
 					if (pageNum % 2 == 1){
 						doc.addPage();
-						doc.text("*Notice* this page is has been left blank on purpose!")
+						doc.text("*Notice* this page is has been left blank on purpose!");
 					}
 
     			 	//Page break unless last student
