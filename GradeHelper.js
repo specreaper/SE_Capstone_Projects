@@ -207,7 +207,7 @@ function StudentWebsiteContentList() {
 				let commitUrl = "https://api.github.com/repos/" + student.githubUSER 
 				+ "/" + student.githubUSER + ".github.io/commits?path=" + fileName + "&sha=main&per_page=100";
 				let commitLength = "N/A";
-				let lastCommit = "N/A"
+				let lastCommit = "N/A";
 				
 
 				// Gets how many commits were made using the github token provided
