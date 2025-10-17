@@ -326,7 +326,7 @@ function StudentWebsiteContentList() {
 					//If so it adds a mostly blank page 
 					if (pageNum % 2 == 1){
 						doc.addPage();
-						doc.text("*Notice* this page is has been left blank on purpose!");
+						doc.text("*Notice* this page is has been left blank on purpose!", 10, 20);
 					}
 
     			 	//Page break unless last student
