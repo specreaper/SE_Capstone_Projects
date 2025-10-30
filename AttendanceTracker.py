@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, relationship #type: i
 
 # Set up the database using SQLAlchemy
 Base = declarative_base()
+engine = create_engine("sqlite:///students.db")
 
 class Student(Base):
     __tablename__ = "students"
@@ -19,7 +20,6 @@ class Student(Base):
     studentID = Column(String, primary_key=True)
 
 # Set up SQLite database
-engine = create_engine("sqlite:///students.db")
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
