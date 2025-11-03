@@ -28,6 +28,7 @@ MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
 SCROLL_DELAY = 0.03
 message_index = 0
+time_index = 0
 color_index = 0
 
 #Sets up the bell schedule
@@ -255,6 +256,7 @@ def setup_display():
 def main():
     global message_index
     global color_index
+    global time_index
     # Initial setup
     connect_wifi()
     sync_ntp_time()
@@ -285,7 +287,13 @@ def main():
             # info_text = f"{date_str} | {time_str} | {weather_str}"
             # info_text = f"{time_str}"
             # matrixportal.set_text(info_text, 1)
-            matrixportal.set_text(time_remaining(), 1)
+            if time_index == 0:
+                matrixportal.set_text(time_remaining(), 1)
+            else:
+                matrixportal.set_text("  " + get_current_datetime()[1], 1)
+
+            time_index = (time_index + 1) % 2
+
 
             # Scroll delay
             matrixportal.scroll_text(SCROLL_DELAY)
