@@ -123,7 +123,7 @@ def get_timezone_offset():
     """Calculate timezone offset in hours"""
     tz = os.getenv("TIMEZONE", "UTC")
     if "New_York" in tz:
-        return -4  # EDT
+        return -5  # EDT
     return 0  # Default to UTC
 
 def get_current_datetime():
