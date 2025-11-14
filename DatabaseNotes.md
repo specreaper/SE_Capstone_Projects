@@ -7,6 +7,7 @@
 # Relational Database 
 * Relational databases are a collection of data tables and the relationship between those tables.
 * In a relational database there are few terms that will be explained in the following table:
+
 | Term Name | Meaning |
 |-----------|---------|
 | Record    | Table row |
