@@ -8,11 +8,11 @@
 * Relational databases are a collection of data tables and the relationship between those tables.
 * In a relational database there are few terms that will be explained in the following table:
 
-| Term Name | Meaning |
-|-----------|---------|
-| Record    | Table row |
-| Field     | Table column |
-| Key       | A field whose data is all unique and can be used to identify data |
+|  Term Name  | Meaning |
+|-------------|---------|
+| **Record**  | Table row |
+| **Field**   | Table column |
+| **Key**     | A field whose data is all unique and can be used to identify data |
 
 * There are eight main ways to extract data from relational databases and they fall into two catagories: Set Operations and Relational Operations.
 * For all of the Set Operations all the fields need to be the same in both tables except when using Cartesian Product.
