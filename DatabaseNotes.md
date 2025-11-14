@@ -25,6 +25,7 @@
 | **Cartesian Product** | Exracts and combines everything on one table with everything on another table | **Division** | Extracts rows whose column values match those in the second table, but only returns columns that don't exist in the second table |
 
 # E-R Model
+* E-R Model stands for Enity Relationship Model. 
 
 # SQL
 
