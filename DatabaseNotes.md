@@ -18,10 +18,10 @@
 
 | Set Operations | Discriptions | Relational Operations | Discriptions |
 |----------------|--------------|-----------------------|--------------|
-| **Union** | Extrats all data from two tables and combines them into one table | Projection | Extracts columns from a table |
-| **Difference** | Extracts all rows from one table that isn't present in the second table | Selection | Extracts rows from a table |
-| **Intersection** | Extracts all rows that a present in both of the two tables provided | Join | Combines two tables | 
-| **Cartesian Product** | Exracts and combines everything on one table with everything on another table | Division | |
+| **Union** | Extracts all data from two tables and combines them into one table | **Projection** | Extracts columns from a table |
+| **Difference** | Extracts all rows from one table that isn't present in the second table | **Selection** | Extracts rows from a table |
+| **Intersection** | Extracts all rows that a present in both of the two tables provided | **Join** | Extracts and combines two tables with at least one common key into one table | 
+| **Cartesian Product** | Exracts and combines everything on one table with everything on another table | **Division** | Extracts rows whose column values match those in the second table, but only returns columns that don't exist in the second table |
 
 # E-R Model
 
