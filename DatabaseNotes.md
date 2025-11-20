@@ -26,7 +26,8 @@
 | **Cartesian Product** | Exracts and combines everything on one table with everything on another table | **Division** | "Extracts rows whose column values match those in the second table, but only returns columns that don't exist in the second table" |
 
 # E-R Model
-* E-R Model stands for Enity Relationship Model. 
+* E-R Model stands for Enity Relationship Model and what it does is help show the relationship between enities.
+* There are three kinds of relationships in the E-R Model One-To-One, One-To-Many, and Many-To-Many. 
 
 # SQL
 
