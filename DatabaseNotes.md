@@ -29,6 +29,8 @@
 * E-R Model stands for Enity Relationship Model and what it does is help show the relationship between enities.
 * There are three kinds of relationships in the E-R Model One-To-One, One-To-Many, and Many-To-Many. 
 
+# Designing Databases
+
 # SQL
 
 # Operating A Database
