@@ -18,9 +18,48 @@
 			<p><strong>STUDENT GITHUB FILE LINKS FINDER</strong></p>
 			<a href="https://specreaper.github.io/SE_Capstone_Projects/GithubWebsiteContentLister.html">GithubWebsiteContentLister</a>
 			<input type="text" id="userInput" placeholder="What file are you looking for?">
-			<button onclick="StudentLinkTable()">Submit</button>
+			<label><input type="checkbox" id="validate"> Validate</label>
+			<button onclick="handleSubmit()">Submit</button>
 			<div id="results"></div>
 		</div>
+
+		<script>
+			// Read ?file=... (or ?q=...) and ?validate=... on load, put into inputs and optionally run link table
+			(function () {
+				const input = document.getElementById('userInput');
+				const validateCheckbox = document.getElementById('validate');
+				const params = new URLSearchParams(window.location.search);
+				const fromUrl = params.get('file') || params.get('q');
+				const validateParam = params.get('validate');
+
+				if (fromUrl) {
+					input.value = fromUrl;
+				}
+				if (validateParam !== null) {
+					const checked = validateParam === '1' || validateParam === 'true' || validateParam === 'on';
+					validateCheckbox.checked = checked;
+				}
+
+				if (fromUrl || validateParam !== null) {
+					if (typeof StudentLinkTable === 'function') StudentLinkTable();
+				}
+
+				// update URL params and call StudentLinkTable / studentLinkTable
+				window.handleSubmit = function () {
+					const v = input.value.trim();
+					const url = new URL(window.location.href);
+					if (v) url.searchParams.set('file', v);
+					else url.searchParams.delete('file');
+
+					if (validateCheckbox.checked) url.searchParams.set('validate', '1');
+					else url.searchParams.delete('validate');
+
+					history.replaceState(null, '', url.toString());
+
+					if (typeof StudentLinkTable === 'function') StudentLinkTable();
+				};
+			})();
+		</script>
 	</body>
 </html>
 

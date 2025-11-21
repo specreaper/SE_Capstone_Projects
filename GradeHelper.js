@@ -1,6 +1,7 @@
 function StudentLinkTable() {
   	// Grab the value from the text box
   	let fileName = document.getElementById("userInput").value.trim();
+	let validate = document.getElementById("validate").checked;
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
@@ -113,10 +114,11 @@ function StudentLinkTable() {
 				// Then creates a link to the website you are looking for 
 				// Next it puts that website through a validator 
 				// Finally it puts in the table whether the website is valid or not 
+				if(validate){
 				setTimeout(() => {
             	const validCell = document.createElement("td");
             	// Checks for if the file exsists
-				if (fileExists) {
+				if (fileExists ) {
 					try{
 						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
 							method: "GET",
@@ -133,7 +135,13 @@ function StudentLinkTable() {
 				}
 				},delay);
 				console.log(`Will validate ${student.name} in ${delay} ms`);
+			}else{
+				const validCell = document.createElement("td");
+				row.appendChild(validCell);
+				validCell.textContent = "Skipping Validation";
+			}
 			});
+			
             table.appendChild(row);
 		});
 		//uploads table
