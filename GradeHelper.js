@@ -118,7 +118,7 @@ function StudentLinkTable() {
 				setTimeout(() => {
             	const validCell = document.createElement("td");
             	// Checks for if the file exsists
-				if (fileExists ) {
+				if (fileExists) {
 					try{
 						fetch("https://validator.w3.org/nu/?out=json&doc=" + encodeURIComponent(fileUrl), {
 							method: "GET",
