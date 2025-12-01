@@ -175,6 +175,7 @@ function StudentWebsiteContentList() {
   	// Grab the value from the text box
   	let fileName = document.getElementById("userInput1").value.trim();
 	let githubToken = document.getElementById("userInput2").value.trim();
+	let breaks = document.getElementById("breaks").checked;
   	// Store in a variable
 	if (!fileName) {
     	alert("Please enter a file name.");
@@ -203,6 +204,7 @@ function StudentWebsiteContentList() {
 		let chain = Promise.resolve();
 		
 		// Loop through each student
+		let y = 30;
         for (const student of data) {
 			chain = chain.then(() => {
 				// Creating shortcuts
@@ -265,18 +267,27 @@ function StudentWebsiteContentList() {
 									+ currentdate.getHours() + ":"  
 									+ currentdate.getMinutes();
 
+					
+					if(breaks){
 					doc.setFontSize(14);
     				doc.text(name + " | " + fileName + " | Retrieved: " + datetime, 10, 15);
     				doc.text("Number of Commits: " + commitLength + " | Last Commit: " 
 						+ lastCommit , 10, 20);
-
+					}else{
+						doc.setFontSize(10);
+						doc.text(name + " | " + fileName + " | Retrieved: " + datetime, 10, y);
+    					doc.text("Number of Commits: " + commitLength + " | Last Commit: " 
+						+ lastCommit , 10, y+7);
+						y += 14;
+					}
 					// Sets up variables 
 					doc.setFontSize(10);
 					const marginLeft = 20;
 					const marginTop = 30;
 					const marginBottom = 10;
-					let y = marginTop; 
-
+					if(breaks){
+						y = marginTop; 
+					}
 					//calculate document margins
     				const pageHeight = doc.internal.pageSize.getHeight();  // total page height
 					
@@ -317,11 +328,14 @@ function StudentWebsiteContentList() {
 							if (y > pageHeight - (marginBottom)) { 
 								// creates new page and resets Y for new page
 								doc.addPage();
-								y = marginTop; 
+								y = marginTop;
 								pageNum++;
-								doc.setFontSize(14);
-								doc.text(name + " | " + fileName, 10, 15);
-								doc.text("Page " + pageNum, 10, 20);
+								if(breaks){
+									doc.setFontSize(14);
+								
+									doc.text(name + " | " + fileName, 10, 15);
+									doc.text("Page " + pageNum, 10, 20);
+								}
 								doc.setFontSize(10);
 							}
 							// prints out single line and moves down for line spacing
@@ -332,15 +346,18 @@ function StudentWebsiteContentList() {
 
 					//Checks if student had a odd number of pages
 					//If so it adds a mostly blank page 
-					if (pageNum % 2 == 1){
+					if (pageNum % 2 == 1 && breaks){
 						doc.addPage();
 						doc.text("*Notice* this page is has been left blank on purpose!", 10, 20);
 					}
 
     			 	//Page break unless last student
-    				if (index < data.length - 1) {
+    				if (index < data.length - 1 && breaks) {
     					doc.addPage();
 						index++;
+					}else{
+						doc.text("----------------", marginLeft, y);
+						y += 7;
 					}		
 				});
 			});
