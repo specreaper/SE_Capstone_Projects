@@ -28,8 +28,12 @@ MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
 SCROLL_DELAY = 0.03
 message_index = 0
-time_index = 0
 color_index = 0
+#Time Related Stuff
+time_index = 0 
+TIMER_DURATION = 5 * 60  # Length of timer
+timer_end = None  # when the timer should end
+
 
 #Sets up the bell schedule
 bell_times = []
@@ -257,6 +261,7 @@ def main():
     global message_index
     global color_index
     global time_index
+    global timer_end
     # Initial setup
     connect_wifi()
     sync_ntp_time()
@@ -265,10 +270,27 @@ def main():
     # Main loop
     while True:
         setschedule()
+        if not btn_down.value:
+            # Start or restart the timer
+            timer_end = time.monotonic() + TIMER_DURATION
+        if timer_end is not None:
+            remaining = int(timer_end - time.monotonic())
+            if remaining <= 0:
+                matrixportal.set_text("Timer Done!", 0)
+                matrixportal.set_text("          ", 1)  # clear bottom line
+                timer_end = None  # stop timer
+            else:
+                minutes = remaining // 60
+                seconds = remaining % 60
+
+                matrixportal.set_text("Timer:", 0)
+                matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+            matrixportal.scroll_text(SCROLL_DELAY)
+            continue
+        
         first_5_mins = is_first_5_mins()
         if first_5_mins != -1:
             matrixportal.set_text("Reading Quiz In:", 0)
-
             matrixportal.set_text(" " + str(first_5_mins) + " secs", 1)
             matrixportal.scroll_text(SCROLL_DELAY)
 
