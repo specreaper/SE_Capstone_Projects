@@ -283,7 +283,7 @@ def main():
                 minutes = remaining // 60
                 seconds = remaining % 60
 
-                matrixportal.set_text("Timer:", 0)
+                matrixportal.set_text(" Timer Time Left", 0)
                 matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
             matrixportal.scroll_text(SCROLL_DELAY)
             continue
