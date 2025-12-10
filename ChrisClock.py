@@ -240,7 +240,7 @@ def setup_display():
         scrolling=False,
     )
 
-    # 2: static top line used ONLY for the timer
+    # Static top line used ONLY for the timer
     matrixportal.add_text(
         text_font=terminalio.FONT,
         text_position=(2, 10),        # SAME position as index 0
