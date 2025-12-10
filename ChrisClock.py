@@ -33,6 +33,7 @@ color_index = 0
 time_index = 0 
 TIMER_DURATION = 5 * 60  # Length of timer
 timer_end = None  # when the timer should end
+last_timer_update = 0 
 
 
 #Sets up the bell schedule
@@ -230,24 +231,6 @@ def setup_display():
         scrolling=True,
     )
 
-    """
-    # Scrolling message (top)
-    matrixportal.add_text(
-        text_font=terminalio.FONT,
-        text_position=(2, 10),
-        text_color=COLORS["yellow"],
-        scrolling=True,
-    )
-
-    # Scrolling message (top)
-    matrixportal.add_text(
-        text_font=terminalio.FONT,
-        text_position=(2, 10),
-        text_color=COLORS["blue"],
-        scrolling=True,
-    )
-    """
-
     # Static info line (bottom)
     matrixportal.add_text(
         text_font=terminalio.FONT,
@@ -257,11 +240,21 @@ def setup_display():
         scrolling=False,
     )
 
+    # 2: static top line used ONLY for the timer
+    matrixportal.add_text(
+        text_font=terminalio.FONT,
+        text_position=(2, 10),        # SAME position as index 0
+        text_color=COLORS["green"],
+        scrolling=False,
+    )
+
 def main():
+    #Calling global variables
     global message_index
     global color_index
     global time_index
     global timer_end
+    global last_timer_update
     # Initial setup
     connect_wifi()
     sync_ntp_time()
@@ -274,18 +267,22 @@ def main():
             # Start or restart the timer
             timer_end = time.monotonic() + TIMER_DURATION
         if timer_end is not None:
-            remaining = int(timer_end - time.monotonic())
-            if remaining <= 0:
-                matrixportal.set_text("Timer Done!", 0)
-                matrixportal.set_text("          ", 1)  # clear bottom line
-                timer_end = None  # stop timer
-            else:
-                minutes = remaining // 60
-                seconds = remaining % 60
+            now = time.monotonic()
+            if now - last_timer_update >= 1:
+                last_timer_update = now
+                remaining = int(timer_end - now)
 
-                matrixportal.set_text(" Timer Time Left", 0)
-                matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
-            matrixportal.scroll_text(SCROLL_DELAY)
+                if remaining <= 0:
+                    matrixportal.set_text("Timer Done!", 0)
+                    matrixportal.set_text("          ", 1)  # clear bottom line
+                    timer_end = None  # stop timer
+                    matrixportal.scroll_text(SCROLL_DELAY)
+                else:
+                    minutes = remaining // 60
+                    seconds = remaining % 60
+
+                    matrixportal.set_text("Time Left: ", 2)
+                    matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
             continue
         
         first_5_mins = is_first_5_mins()
