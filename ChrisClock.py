@@ -274,7 +274,8 @@ def main():
 
                 if remaining <= 0:
                     matrixportal.set_text("Timer Done!", 0)
-                    matrixportal.set_text("          ", 1)  # clear bottom line
+                    matrixportal.set_text("          ", 1) # clear bottom line
+                    matrixportal.set_text("          ", 2) # clear top line
                     timer_end = None  # stop timer
                     matrixportal.scroll_text(SCROLL_DELAY)
                 else:
