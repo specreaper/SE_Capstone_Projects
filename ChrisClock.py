@@ -263,7 +263,7 @@ def main():
     # Main loop
     while True:
         setschedule()
-        if not btn_down.value:
+        if not btn_down.value and timer_end == None:
             # Start or restart the timer
             timer_end = time.monotonic() + TIMER_DURATION
         if timer_end is not None:
@@ -284,6 +284,10 @@ def main():
 
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+                if not btn_down.value:
+                    timer_end += TIMER_DURATION
+                if not btn_up.value:
+                    timer_end -= TIMER_DURATION
             continue
         
         first_5_mins = is_first_5_mins()
