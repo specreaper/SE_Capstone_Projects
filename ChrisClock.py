@@ -284,8 +284,10 @@ def main():
 
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+                # Down adding time 
                 if not btn_down.value:
                     timer_end += TIMER_DURATION
+                # Up adding time
                 if not btn_up.value:
                     timer_end -= TIMER_DURATION
             continue
