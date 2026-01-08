@@ -263,9 +263,20 @@ def main():
     # Main loop
     while True:
         setschedule()
+
+        #if you're pressing down and no timer is set
         if not btn_down.value and timer_end == None:
             # Start or restart the timer
             timer_end = time.monotonic() + TIMER_DURATION
+        #elsif you're pressing down and there's already a timer
+        # Down adding time 
+        elif not btn_down.value:
+            timer_end += TIMER_DURATION
+        #elseif you're pressing UP and there's already a timer
+        # Up adding time
+        elif not btn_up.value and timer_end > 0:
+            timer_end -= TIMER_DURATION
+        #ok, no if the timer is set, show it
         if timer_end is not None:
             now = time.monotonic()
             if now - last_timer_update >= 1:
@@ -284,45 +295,37 @@ def main():
 
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
-                # Down adding time 
-                if not btn_down.value:
-                    timer_end += TIMER_DURATION
-                # Up adding time
-                if not btn_up.value:
-                    timer_end -= TIMER_DURATION
-            continue
-        
-        first_5_mins = is_first_5_mins()
-        if first_5_mins != -1:
-            matrixportal.set_text("Reading Quiz In:", 0)
-            matrixportal.set_text(" " + str(first_5_mins) + " secs", 1)
-            matrixportal.scroll_text(SCROLL_DELAY)
-
         else:
-            # Update scrolling message
-            message = MESSAGES[message_index]
-            print(message)
-            matrixportal.set_text(message, 0)
-            message_index = (message_index + 1) % len(MESSAGES)
-
-            matrixportal.set_text_color(random.choice(list(COLORS.values())))
-
-            # Update info line
-            # date_str, time_str = get_current_datetime()
-            # weather_str = get_weather()
-            # info_text = f"{date_str} | {time_str} | {weather_str}"
-            # info_text = f"{time_str}"
-            # matrixportal.set_text(info_text, 1)
-            if time_index == 0:
-                matrixportal.set_text(time_remaining(), 1)
+            first_5_mins = is_first_5_mins()
+            if first_5_mins != -1:
+                matrixportal.set_text("Reading Quiz In:", 0)
+                matrixportal.set_text(" " + str(first_5_mins) + " secs", 1)
+                matrixportal.scroll_text(SCROLL_DELAY)
             else:
-                matrixportal.set_text("  " + get_current_datetime()[1], 1)
+                # Update scrolling message
+                message = MESSAGES[message_index]
+                print(message)
+                matrixportal.set_text(message, 0)
+                message_index = (message_index + 1) % len(MESSAGES)
 
-            time_index = (time_index + 1) % 2
+                matrixportal.set_text_color(random.choice(list(COLORS.values())))
+
+                # Update info line
+                # date_str, time_str = get_current_datetime()
+                # weather_str = get_weather()
+                # info_text = f"{date_str} | {time_str} | {weather_str}"
+                # info_text = f"{time_str}"
+                # matrixportal.set_text(info_text, 1)
+                if time_index == 0:
+                    matrixportal.set_text(time_remaining(), 1)
+                else:
+                    matrixportal.set_text("  " + get_current_datetime()[1], 1)
+
+                time_index = (time_index + 1) % 2
 
 
-            # Scroll delay
-            matrixportal.scroll_text(SCROLL_DELAY)
+                # Scroll delay
+                matrixportal.scroll_text(SCROLL_DELAY)
 
     print("done")
 
