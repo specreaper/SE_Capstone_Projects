@@ -295,6 +295,7 @@ def main():
 
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+            time.sleep(1)
         else:
             first_5_mins = is_first_5_mins()
             if first_5_mins != -1:
