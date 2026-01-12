@@ -97,7 +97,7 @@ def manage_timer_time():
         timer_end += TIMER_DURATION
     #elseif you're pressing UP and there's already a timer
     # Up adding time
-    elif not btn_up.value and timer_end > 0:
+    elif not btn_up.value and timer_end is not None:
         timer_end -= TIMER_DURATION
 
 
@@ -230,6 +230,7 @@ def time_remaining():
 
 
 def scroll_speed_update():
+    global SCROLL_DELAY
     SCROLL_DURATION = 5.0
     label = matrixportal.graphics.text[0]
     text_width = label.bounding_box[2]  # width in pixels
