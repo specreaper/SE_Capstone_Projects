@@ -26,22 +26,19 @@ matrixportal.graphics.display.rotation = 180
 # Matrix configuration
 MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
-SCROLL_DELAY = 0.03
+SCROLL_DELAY = 0
 message_index = 0
 color_index = 0
-#Time Related Stuff
-time_index = 0 
-TIMER_DURATION = 5 * 60  # Length of timer
 timer_end = None  # when the timer should end
-last_timer_update = 0 
-
 
 #Sets up the bell schedule
 bell_times = []
 class_start_times = []
 daytype = 1
 MESSAGES = []
-def setschedule():
+
+# This is for getting and changing the schedule
+def set_schedule():
     global bell_times
     global class_start_times
     global daytype
@@ -86,13 +83,58 @@ def setschedule():
              ,"19:00", "19:05", "19:15", "19:20", "19:30", "19:35", "19:45"
              ,"19:50", "20:00"]
 
-# Color definitions (RGB)
-COLORS = {
-    "green": (0, 255, 0),
-    "yellow": (255, 255, 0),
-    "blue": (0, 0, 255),
-    "white": (255, 255, 255),
-}
+
+def manage_timer_time():
+    global timer_end
+    TIMER_DURATION = 5 * 60  # Length of timer
+    #if you're pressing down and no timer is set
+    if not btn_down.value and timer_end == None:
+        # Start or restart the timer
+        timer_end = time.monotonic() + TIMER_DURATION
+    #elsif you're pressing down and there's already a timer
+    # Down adding time 
+    elif not btn_down.value:
+        timer_end += TIMER_DURATION
+    #elseif you're pressing UP and there's already a timer
+    # Up adding time
+    elif not btn_up.value and timer_end > 0:
+        timer_end -= TIMER_DURATION
+
+
+def is_first_5_mins():
+    now = time.localtime()
+    if now.tm_hour == 0:
+        sync_ntp_time()
+
+    # Get current time in minutes since midnight
+    current_minutes = now.tm_hour * 60 + now.tm_min
+    current_seconds = current_minutes * 60 + now.tm_sec
+
+    # Convert bell times to minutes since midnight
+    bell_minutes = []
+    for bell in class_start_times:
+        hour, minute = map(int, bell.split(":"))
+        bell_minutes.append(hour * 60 + minute)
+
+    # Find the most recent bell time
+    last_bell_min = None
+    for bell_min in bell_minutes:
+        if bell_min * 60 <= current_seconds:  # Compare in seconds
+            last_bell_min = bell_min
+        else:
+            break
+
+    # 5 mins, minus the amount of time we've been in class
+    try:
+        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
+    except:
+        time_diff_seconds = 0
+
+    if time_diff_seconds > 0:
+        return time_diff_seconds
+    else:
+        return -1
+
 
 def connect_wifi():
     """Connect to WiFi using settings.toml credentials"""
@@ -140,8 +182,8 @@ def get_current_datetime():
     time_str = f"{hour}:{now.tm_min:02d} {am_pm}"
     return date_str, time_str
 
+
 def time_remaining():
-    
     now = time.localtime()
     if now.tm_hour == 0:
         sync_ntp_time()
@@ -187,39 +229,22 @@ def time_remaining():
         return f"{seconds} sec"
 
 
-def is_first_5_mins():
-    now = time.localtime()
-    if now.tm_hour == 0:
-        sync_ntp_time()
+def scroll_speed_update():
+    SCROLL_DURATION = 5.0
+    label = matrixportal.graphics.text[0]
+    text_width = label.bounding_box[2]  # width in pixels
+    disp_width = matrixportal.graphics.display.width
+    SCROLL_DELAY = SCROLL_DURATION / (text_width + disp_width)
 
-    # Get current time in minutes since midnight
-    current_minutes = now.tm_hour * 60 + now.tm_min
-    current_seconds = current_minutes * 60 + now.tm_sec
 
-    # Convert bell times to minutes since midnight
-    bell_minutes = []
-    for bell in class_start_times:
-        hour, minute = map(int, bell.split(":"))
-        bell_minutes.append(hour * 60 + minute)
+# Color definitions (RGB)
+COLORS = {
+    "green": (0, 255, 0),
+    "yellow": (255, 255, 0),
+    "blue": (0, 0, 255),
+    "white": (255, 255, 255),
+}
 
-    # Find the most recent bell time
-    last_bell_min = None
-    for bell_min in bell_minutes:
-        if bell_min * 60 <= current_seconds:  # Compare in seconds
-            last_bell_min = bell_min
-        else:
-            break
-
-    # 5 mins, minus the amount of time we've been in class
-    try:
-        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
-    except:
-        time_diff_seconds = 0
-
-    if time_diff_seconds > 0:
-        return time_diff_seconds
-    else:
-        return -1
 
 def setup_display():
     """Initialize display elements"""
@@ -248,13 +273,17 @@ def setup_display():
         scrolling=False,
     )
 
+
 def main():
     #Calling global variables
     global message_index
     global color_index
-    global time_index
     global timer_end
-    global last_timer_update
+
+    #Time Related Stuff
+    time_index = 0
+    last_timer_update = 0
+     
     # Initial setup
     connect_wifi()
     sync_ntp_time()
@@ -262,21 +291,9 @@ def main():
 
     # Main loop
     while True:
-        setschedule()
-
-        #if you're pressing down and no timer is set
-        if not btn_down.value and timer_end == None:
-            # Start or restart the timer
-            timer_end = time.monotonic() + TIMER_DURATION
-        #elsif you're pressing down and there's already a timer
-        # Down adding time 
-        elif not btn_down.value:
-            timer_end += TIMER_DURATION
-        #elseif you're pressing UP and there's already a timer
-        # Up adding time
-        elif not btn_up.value and timer_end > 0:
-            timer_end -= TIMER_DURATION
-        #ok, no if the timer is set, show it
+        set_schedule()
+        manage_timer_time()
+        # If there is time in the timer show it
         if timer_end is not None:
             now = time.monotonic()
             if now - last_timer_update >= 1:
@@ -288,6 +305,7 @@ def main():
                     matrixportal.set_text("          ", 1) # clear bottom line
                     matrixportal.set_text("          ", 2) # clear top line
                     timer_end = None  # stop timer
+                    scroll_speed_update()
                     matrixportal.scroll_text(SCROLL_DELAY)
                 else:
                     minutes = remaining // 60
@@ -301,6 +319,7 @@ def main():
             if first_5_mins != -1:
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(" " + str(first_5_mins) + " secs", 1)
+                scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
             else:
                 # Update scrolling message
@@ -326,6 +345,7 @@ def main():
 
 
                 # Scroll delay
+                scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
 
     print("done")
