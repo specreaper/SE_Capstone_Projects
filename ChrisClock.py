@@ -232,7 +232,12 @@ def time_remaining():
 def scroll_speed_update():
     global SCROLL_DELAY
     SCROLL_DURATION = 5.0
-    label = matrixportal.graphics.text[0]
+    
+    try:
+        label = matrixportal.graphics.text[0]
+    except AttributeError:
+        label = matrixportal.graphics._text[0]
+    
     text_width = label.bounding_box[2]  # width in pixels
     disp_width = matrixportal.graphics.display.width
     SCROLL_DELAY = SCROLL_DURATION / (text_width + disp_width)
