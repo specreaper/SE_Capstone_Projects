@@ -35,6 +35,7 @@ bell_times = []
 class_start_times = []
 MESSAGES = [" "]
 message_index = 0
+daytype = 1
 
 # This is for getting and changing the schedule
 def set_schedule():
@@ -42,8 +43,7 @@ def set_schedule():
     global class_start_times
     global MESSAGES
     global MessageUpdate
-
-    daytype = 1
+    global daytype
 
     # checks for if the button is pressed
     # if it is changes daytype
@@ -51,6 +51,7 @@ def set_schedule():
         daytype += 1
         if daytype > 3:
             daytype = 1
+        MessageUpdate = True
     
     #Checks if daytype is a Regular Bell Schedule
     if daytype == 1:
@@ -60,27 +61,24 @@ def set_schedule():
                                              , "13:40"]
         if not btn_up.value:
             MESSAGES = ["Regular Bell Schedule"]
-            MessageUpdate = True
 
     #Checks if daytype is a Early Release Schedule
-    elif daytype == 2:
+    if daytype == 2:
         bell_times =        ["8:00", "9:05", "9:10", "10:15", "10:20", "11:25", "11:30"
                             , "12:05", "12:50"]
         class_start_times = ["8:00",         "9:10",          "10:20",          "11:30"
                             , "12:05"]
         if not btn_up.value:
             MESSAGES = ["Early Release Schedule"]
-            MessageUpdate = True 
 
     #Checks if daytype is a 2-Hour Delay Schedule
-    elif daytype == 3:
+    if daytype == 3:
         bell_times =        ["10:00", "11:00", "11:05", "11:35", "11:40", "12:30", "12:35"
                             , "13:30", "13:35", "14:10", "15:00"]
         class_start_times = ["10:00",          "11:05",          "11:40",          "12:35"
                                               , "14:10"]
         if not btn_up.value:
             MESSAGES = ["2-Hour Delay Schedule"]
-            MessageUpdate = True 
     
     #Add this part for BTSN
     bell_times = bell_times+["18:00", "18:15", "18:20", "18:30", "18:35", "18:45", "18:50"
@@ -294,6 +292,8 @@ def main():
             matrixportal.set_text(message, 0)
             message_index = (message_index + 1) % len(MESSAGES)
             MessageUpdate = False
+            matrixportal.set_text("          ", 2) # clear top line
+            
             # Scroll delay
             scroll_speed_update()
             matrixportal.scroll_text(SCROLL_DELAY)
