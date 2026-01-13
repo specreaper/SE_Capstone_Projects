@@ -10,6 +10,7 @@ import random # type: ignore
 import digitalio # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
+print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
 btn_up.direction = digitalio.Direction.INPUT
@@ -230,17 +231,18 @@ def time_remaining():
 
 
 def scroll_speed_update():
+
     global SCROLL_DELAY
+    global line_width
     SCROLL_DURATION = 5.0
-    
-    try:
-        label = matrixportal.graphics.text[0]
-    except AttributeError:
-        label = matrixportal.graphics._text[0]
-    
-    text_width = label.bounding_box[2]  # width in pixels
+    SCROLL_DELAY = 0.03 
     disp_width = matrixportal.graphics.display.width
-    SCROLL_DELAY = SCROLL_DURATION / (text_width + disp_width)
+    line_width = (
+            matrixportal._text[matrixportal._scrolling_index]["label"].bounding_box[2]
+            * matrixportal._text[matrixportal._scrolling_index]["scale"]
+        )
+    
+    SCROLL_DELAY = SCROLL_DURATION / (line_width + disp_width)
 
 
 # Color definitions (RGB)
@@ -353,6 +355,7 @@ def main():
                 # Scroll delay
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
+                print(line_width) 
 
     print("done")
 
