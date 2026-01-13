@@ -22,27 +22,29 @@ btn_down.pull = digitalio.Pull.UP  # enable internal pull-up
 
 # Initialize MatrixPortal
 matrixportal = MatrixPortal(status_neopixel=board.NEOPIXEL, debug=False)
-matrixportal.graphics.display.rotation = 180
+matrixportal.graphics.display.rotation = 0
 # Matrix configuration
 MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
 SCROLL_DELAY = 0
-message_index = 0
-color_index = 0
 timer_end = None  # when the timer should end
+MessageUpdate = False
 
 #Sets up the bell schedule
 bell_times = []
 class_start_times = []
-daytype = 1
-MESSAGES = []
+MESSAGES = [" "]
+message_index = 0
 
 # This is for getting and changing the schedule
 def set_schedule():
     global bell_times
     global class_start_times
-    global daytype
     global MESSAGES
+    global MessageUpdate
+
+    daytype = 1
+
     # checks for if the button is pressed
     # if it is changes daytype
     if not btn_up.value: 
@@ -58,27 +60,30 @@ def set_schedule():
                                              , "13:40"]
         if not btn_up.value:
             MESSAGES = ["Regular Bell Schedule"]
+            MessageUpdate = True
 
     #Checks if daytype is a Early Release Schedule
-    if daytype == 2:
+    elif daytype == 2:
         bell_times =        ["8:00", "9:05", "9:10", "10:15", "10:20", "11:25", "11:30"
                             , "12:05", "12:50"]
         class_start_times = ["8:00",         "9:10",          "10:20",          "11:30"
                             , "12:05"]
         if not btn_up.value:
-            MESSAGES = ["Early Release Schedule"] 
+            MESSAGES = ["Early Release Schedule"]
+            MessageUpdate = True 
 
     #Checks if daytype is a 2-Hour Delay Schedule
-    if daytype == 3:
+    elif daytype == 3:
         bell_times =        ["10:00", "11:00", "11:05", "11:35", "11:40", "12:30", "12:35"
                             , "13:30", "13:35", "14:10", "15:00"]
         class_start_times = ["10:00",          "11:05",          "11:40",          "12:35"
                                               , "14:10"]
         if not btn_up.value:
-            MESSAGES = ["2-Hour Delay Schedule"] 
+            MESSAGES = ["2-Hour Delay Schedule"]
+            MessageUpdate = True 
     
     #Add this part for BTSN
-    bell_times+=["18:00", "18:15", "18:20", "18:30", "18:35", "18:45", "18:50"
+    bell_times = bell_times+["18:00", "18:15", "18:20", "18:30", "18:35", "18:45", "18:50"
              ,"19:00", "19:05", "19:15", "19:20", "19:30", "19:35", "19:45"
              ,"19:50", "20:00"]
 
@@ -98,41 +103,6 @@ def manage_timer_time():
     # Up adding time
     elif not btn_up.value and timer_end is not None:
         timer_end -= TIMER_DURATION
-
-
-def is_first_5_mins():
-    now = time.localtime()
-    if now.tm_hour == 0:
-        sync_ntp_time()
-
-    # Get current time in minutes since midnight
-    current_minutes = now.tm_hour * 60 + now.tm_min
-    current_seconds = current_minutes * 60 + now.tm_sec
-
-    # Convert bell times to minutes since midnight
-    bell_minutes = []
-    for bell in class_start_times:
-        hour, minute = map(int, bell.split(":"))
-        bell_minutes.append(hour * 60 + minute)
-
-    # Find the most recent bell time
-    last_bell_min = None
-    for bell_min in bell_minutes:
-        if bell_min * 60 <= current_seconds:  # Compare in seconds
-            last_bell_min = bell_min
-        else:
-            break
-
-    # 5 mins, minus the amount of time we've been in class
-    try:
-        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
-    except:
-        time_diff_seconds = 0
-
-    if time_diff_seconds > 0:
-        return time_diff_seconds
-    else:
-        return -1
 
 
 def connect_wifi():
@@ -281,9 +251,9 @@ def setup_display():
 
 def main():
     #Calling global variables
-    global message_index
-    global color_index
     global timer_end
+    global message_index
+    global MessageUpdate
 
     last_timer_update = 0
      
@@ -291,7 +261,7 @@ def main():
     connect_wifi()
     sync_ntp_time()
     setup_display()
-
+ 
     # Main loop
     while True:
         set_schedule()
@@ -317,13 +287,17 @@ def main():
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
-        else:
+        elif(MessageUpdate == True):
             # Update scrolling message
             message = MESSAGES[message_index]
             print(message)
-            matrixportal.set_text(message, 2)
+            matrixportal.set_text(message, 0)
             message_index = (message_index + 1) % len(MESSAGES)
-
+            MessageUpdate = False
+            # Scroll delay
+            scroll_speed_update()
+            matrixportal.scroll_text(SCROLL_DELAY)
+        else:
             # Update info line
             # date_str, time_str = get_current_datetime()
             # weather_str = get_weather()
@@ -331,11 +305,9 @@ def main():
             # info_text = f"{time_str}"
             # matrixportal.set_text(info_text, 1)
             matrixportal.set_text(time_remaining(), 1)
-            matrixportal.set_text("  " + get_current_datetime()[2], 2)
+            matrixportal.set_text("  " + get_current_datetime()[1], 2)
 
-                # Scroll delay
-            scroll_speed_update()
-            matrixportal.scroll_text(SCROLL_DELAY)
+            time.sleep(1)
 
     print("done")
 
