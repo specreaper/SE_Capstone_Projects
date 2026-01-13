@@ -6,7 +6,6 @@ import socketpool # type: ignore
 import adafruit_ntp # type: ignore
 import terminalio# type: ignore
 import rtc # type: ignore
-import random # type: ignore
 import digitalio # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
@@ -27,6 +26,7 @@ matrixportal.graphics.display.rotation = 180
 # Matrix configuration
 MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
+SCROLL_DELAY = 0
 message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
@@ -43,7 +43,6 @@ def set_schedule():
     global class_start_times
     global daytype
     global MESSAGES
-    MESSAGES = ["ict.gctaa.net"]
     # checks for if the button is pressed
     # if it is changes daytype
     if not btn_up.value: 
@@ -99,6 +98,41 @@ def manage_timer_time():
     # Up adding time
     elif not btn_up.value and timer_end is not None:
         timer_end -= TIMER_DURATION
+
+
+def is_first_5_mins():
+    now = time.localtime()
+    if now.tm_hour == 0:
+        sync_ntp_time()
+
+    # Get current time in minutes since midnight
+    current_minutes = now.tm_hour * 60 + now.tm_min
+    current_seconds = current_minutes * 60 + now.tm_sec
+
+    # Convert bell times to minutes since midnight
+    bell_minutes = []
+    for bell in class_start_times:
+        hour, minute = map(int, bell.split(":"))
+        bell_minutes.append(hour * 60 + minute)
+
+    # Find the most recent bell time
+    last_bell_min = None
+    for bell_min in bell_minutes:
+        if bell_min * 60 <= current_seconds:  # Compare in seconds
+            last_bell_min = bell_min
+        else:
+            break
+
+    # 5 mins, minus the amount of time we've been in class
+    try:
+        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
+    except:
+        time_diff_seconds = 0
+
+    if time_diff_seconds > 0:
+        return time_diff_seconds
+    else:
+        return -1
 
 
 def connect_wifi():
@@ -194,6 +228,21 @@ def time_remaining():
         return f"{seconds} sec"
 
 
+def scroll_speed_update():
+
+    global SCROLL_DELAY
+    global line_width
+    SCROLL_DURATION = 5.0
+    SCROLL_DELAY = 0.03 
+    disp_width = matrixportal.graphics.display.width
+    line_width = (
+            matrixportal._text[matrixportal._scrolling_index]["label"].bounding_box[2]
+            * matrixportal._text[matrixportal._scrolling_index]["scale"]
+        )
+    
+    SCROLL_DELAY = SCROLL_DURATION / (line_width + disp_width)
+
+
 # Color definitions (RGB)
 COLORS = {
     "green": (0, 255, 0),
@@ -205,12 +254,12 @@ COLORS = {
 
 def setup_display():
     """Initialize display elements"""
-    # Static top line
+    # Scrolling top line
     matrixportal.add_text(
         text_font=terminalio.FONT,
-        text_position=(2, 10),        # SAME position as index 0
+        text_position=(2, 10),
         text_color=COLORS["green"],
-        scrolling=False,
+        scrolling=True,
     )
 
     # Static bottom line
@@ -221,6 +270,14 @@ def setup_display():
         scrolling=False,
     )
 
+    # Static top line
+    matrixportal.add_text(
+        text_font=terminalio.FONT,
+        text_position=(2, 10),        # SAME position as index 0
+        text_color=COLORS["green"],
+        scrolling=False,
+    )
+
 
 def main():
     #Calling global variables
@@ -228,7 +285,6 @@ def main():
     global color_index
     global timer_end
 
-    #Time Related Stuff
     last_timer_update = 0
      
     # Initial setup
@@ -250,24 +306,23 @@ def main():
                 if remaining <= 0:
                     matrixportal.set_text("Timer Done!", 0)
                     matrixportal.set_text("          ", 1) # clear bottom line
-                    matrixportal.set_text("          ", 0) # clear top line
+                    matrixportal.set_text("          ", 2) # clear top line
                     timer_end = None  # stop timer
-                    time.sleep(1)
+                    scroll_speed_update()
+                    matrixportal.scroll_text(SCROLL_DELAY)
                 else:
                     minutes = remaining // 60
                     seconds = remaining % 60
 
-                    matrixportal.set_text("Time Left: ", 0)
+                    matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
         else:
             # Update scrolling message
             message = MESSAGES[message_index]
             print(message)
-            matrixportal.set_text(message, 0)
+            matrixportal.set_text(message, 2)
             message_index = (message_index + 1) % len(MESSAGES)
-
-            matrixportal.set_text_color(random.choice(list(COLORS.values())))
 
             # Update info line
             # date_str, time_str = get_current_datetime()
@@ -276,7 +331,11 @@ def main():
             # info_text = f"{time_str}"
             # matrixportal.set_text(info_text, 1)
             matrixportal.set_text(time_remaining(), 1)
-            matrixportal.set_text("  " + get_current_datetime()[0], 0)
+            matrixportal.set_text("  " + get_current_datetime()[2], 2)
+
+                # Scroll delay
+            scroll_speed_update()
+            matrixportal.scroll_text(SCROLL_DELAY)
 
     print("done")
 
