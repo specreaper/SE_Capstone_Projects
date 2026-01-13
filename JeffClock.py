@@ -252,8 +252,7 @@ def main():
                     matrixportal.set_text("          ", 1) # clear bottom line
                     matrixportal.set_text("          ", 0) # clear top line
                     timer_end = None  # stop timer
-                    scroll_speed_update()
-                    matrixportal.scroll_text(SCROLL_DELAY)
+                    time.sleep(1)
                 else:
                     minutes = remaining // 60
                     seconds = remaining % 60
