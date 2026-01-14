@@ -321,13 +321,13 @@ def main():
                     seconds = remaining % 60
 
                     matrixportal.set_text("Time Left: ", 2)
-                    matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+                    matrixportal.set_text(f"{minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
         else:
             first_5_mins = is_first_5_mins()
             if first_5_mins != -1:
                 matrixportal.set_text("Reading Quiz In:", 0)
-                matrixportal.set_text(" " + str(first_5_mins) + " secs", 1)
+                matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
             else:
@@ -348,7 +348,7 @@ def main():
                 if time_index == 0:
                     matrixportal.set_text(time_remaining(), 1)
                 else:
-                    matrixportal.set_text("  " + get_current_datetime()[1], 1)
+                    matrixportal.set_text(get_current_datetime()[1], 1)
 
                 time_index = (time_index + 1) % 2
 

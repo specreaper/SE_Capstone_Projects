@@ -282,8 +282,8 @@ def main():
                     minutes = remaining // 60
                     seconds = remaining % 60
 
-                    matrixportal.set_text("Time Left: ", 2)
-                    matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
+                    matrixportal.set_text("Time Left:", 2)
+                    matrixportal.set_text(f"{minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
         elif(MovingMessageUpdate == True):
             # Update scrolling message
@@ -304,7 +304,7 @@ def main():
             # info_text = f"{date_str} | {time_str} | {weather_str}"
             # info_text = f"{time_str}"
             # matrixportal.set_text(info_text, 1)
-            matrixportal.set_text("  " + get_current_datetime()[1], 2)
+            matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
 
