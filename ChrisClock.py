@@ -32,7 +32,7 @@ message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
 
-#Sets up the bell schedule
+#Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
 daytype = 1
@@ -52,7 +52,7 @@ def set_schedule():
         if daytype > 3:
             daytype = 1
     
-    #Checks if daytype is a Regular Bell Schedule
+    #Checks if daytype is a Regular Bell Schedule and sets it up if it is
     if daytype == 1:
         bell_times =        ["8:00", "9:24", "9:29", "9:59", "10:04", "11:27", "11:32" 
                             , "12:55", "13:35", "13:40", "15:00"]
@@ -61,7 +61,7 @@ def set_schedule():
         if not btn_up.value:
             MESSAGES = ["Regular Bell Schedule"]
 
-    #Checks if daytype is a Early Release Schedule
+    #Checks if daytype is a Early Release Schedule and sets it up if it is
     if daytype == 2:
         bell_times =        ["8:00", "9:05", "9:10", "10:15", "10:20", "11:25", "11:30"
                             , "12:05", "12:50"]
@@ -70,7 +70,7 @@ def set_schedule():
         if not btn_up.value:
             MESSAGES = ["Early Release Schedule"] 
 
-    #Checks if daytype is a 2-Hour Delay Schedule
+    #Checks if daytype is a 2-Hour Delay Schedule and sets it up if it is
     if daytype == 3:
         bell_times =        ["10:00", "11:00", "11:05", "11:35", "11:40", "12:30", "12:35"
                             , "13:30", "13:35", "14:10", "15:00"]
@@ -230,6 +230,7 @@ def time_remaining():
         return f"{seconds} sec"
 
 
+# Handeles the text scroll speed depending on the message length
 def scroll_speed_update():
 
     global SCROLL_DELAY
