@@ -32,13 +32,6 @@ message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
 
-# Message variables
-FontSize = 6 # Need to change whenever change font or font size, but please use a monospace font.
-CenterTop = 1
-CenterBottom = 1
-StillMessageTop = "           "
-StillMessageBottom = "           "
-
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
@@ -251,22 +244,6 @@ def scroll_speed_update():
     SCROLL_DELAY = SCROLL_DURATION / (line_width + MATRIX_WIDTH)
 
 
-def center_text_update():
-    global CenterTop
-    global CenterBottom
-    # Worked and was adaptable, but couldn't figure out how to update text center with it before text changed
-    #top_text_width = (
-    #    matrixportal._text[2]["label"].bounding_box[2] * matrixportal._text[2]["scale"]
-    #)
-    #bottom_text_width = (
-    #    matrixportal._text[1]["label"].bounding_box[2] * matrixportal._text[1]["scale"]
-    #)
-    top_text_width = len(StillMessageTop)
-    bottom_text_width = len(StillMessageBottom)
-    CenterTop = MATRIX_WIDTH - (top_text_width * FontSize)
-    CenterBottom = MATRIX_WIDTH - (bottom_text_width * FontSize)
-
-
 # Color definitions (RGB)
 COLORS = {
     "green": (0, 255, 0),
@@ -278,6 +255,7 @@ COLORS = {
 
 def setup_display():
     """Initialize display elements"""
+    center = MATRIX_WIDTH // 2
     # Scrolling message (top)
     matrixportal.add_text(
         text_font=terminalio.FONT,
@@ -289,7 +267,7 @@ def setup_display():
     # Static info line (bottom)
     matrixportal.add_text(
         text_font=terminalio.FONT,
-        text_position=(CenterBottom, 24),
+        text_position=(center, 24),
         text_color=COLORS["yellow"],
         scrolling=False,
     )
@@ -297,7 +275,7 @@ def setup_display():
     # Static top line used ONLY for the timer
     matrixportal.add_text(
         text_font=terminalio.FONT,
-        text_position=(CenterTop, 10),        # SAME position as index 0
+        text_position=(center, 10),        # SAME position as index 0
         text_color=COLORS["green"],
         scrolling=False,
     )
@@ -308,8 +286,6 @@ def main():
     global message_index
     global color_index
     global timer_end
-    global StillMessageTop 
-    global StillMessageBottom 
 
     #Time Related Stuff
     time_index = 0
@@ -332,12 +308,9 @@ def main():
                 remaining = int(timer_end - now)
 
                 if remaining <= 0:
-                    StillMessageTop = "           "
-                    StillMessageBottom = "           "
-                    center_text_update()
                     matrixportal.set_text("Timer Done!", 0)
-                    matrixportal.set_text(StillMessageTop, 2) # clear bottom static line
-                    matrixportal.set_text(StillMessageBottom, 1) # clear top static line
+                    matrixportal.set_text("           ", 2) # clear bottom static line
+                    matrixportal.set_text("           ", 1) # clear top static line
                     timer_end = None  # stop timer
                     scroll_speed_update()
                     matrixportal.scroll_text(SCROLL_DELAY)
@@ -345,11 +318,8 @@ def main():
                     minutes = remaining // 60
                     seconds = remaining % 60
 
-                    StillMessageTop = "Time Left: "
-                    StillMessageBottom = f"  {minutes:02d}:{seconds:02d}"
-                    center_text_update()
-                    matrixportal.set_text(StillMessageTop, 2)
-                    matrixportal.set_text(StillMessageBottom, 1)
+                    matrixportal.set_text("Time Left: ", 2)
+                    matrixportal.set_text(f"  {minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
         else:
             first_5_mins = is_first_5_mins()
@@ -374,13 +344,9 @@ def main():
                 # info_text = f"{time_str}"
                 # matrixportal.set_text(info_text, 1)
                 if time_index == 0:
-                    StillMessageBottom = time_remaining()
-                    center_text_update()
-                    matrixportal.set_text(StillMessageBottom, 1)
+                    matrixportal.set_text(time_remaining(), 1)
                 else:
-                    StillMessageBottom = "  " + get_current_datetime()[1]
-                    center_text_update()
-                    matrixportal.set_text(StillMessageBottom, 1)
+                    matrixportal.set_text("  " + get_current_datetime()[1], 1)
 
                 time_index = (time_index + 1) % 2
 
