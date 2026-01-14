@@ -351,11 +351,9 @@ def main():
 
                 time_index = (time_index + 1) % 2
 
-
                 # Scroll delay
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
-                print(line_width) 
 
     print("done")
 

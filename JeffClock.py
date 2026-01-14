@@ -272,12 +272,10 @@ def main():
                 remaining = int(timer_end - now)
 
                 if remaining <= 0:
-                    matrixportal.set_text("Timer Done!", 0)
-                    matrixportal.set_text("          ", 1) # clear bottom line
-                    matrixportal.set_text("          ", 2) # clear top line
+                    matrixportal.set_text("           ", 1) # clear bottom static line
+                    matrixportal.set_text("Timer Done!", 2) 
                     timer_end = None  # stop timer
-                    scroll_speed_update()
-                    matrixportal.scroll_text(SCROLL_DELAY)
+                    time.sleep(3)
                 else:
                     minutes = remaining // 60
                     seconds = remaining % 60
@@ -292,7 +290,7 @@ def main():
             matrixportal.set_text(message, 0)
             message_index = (message_index + 1) % len(MESSAGES)
             MessageUpdate = False
-            matrixportal.set_text("          ", 2) # clear top line
+            matrixportal.set_text("          ", 2) # clear top static line
             
             # Scroll delay
             scroll_speed_update()
@@ -306,7 +304,6 @@ def main():
             # matrixportal.set_text(info_text, 1)
             matrixportal.set_text(time_remaining(), 1)
             matrixportal.set_text("  " + get_current_datetime()[1], 2)
-
             time.sleep(1)
 
     print("done")
