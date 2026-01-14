@@ -270,6 +270,7 @@ def setup_display():
         text_position=(center, 24),
         text_color=COLORS["yellow"],
         scrolling=False,
+        text_anchor_point=(0.5, 0.5),
     )
 
     # Static top line used ONLY for the timer
@@ -278,6 +279,7 @@ def setup_display():
         text_position=(center, 10),        # SAME position as index 0
         text_color=COLORS["green"],
         scrolling=False,
+        text_anchor_point=(0.5, 0.5),
     )
 
 
