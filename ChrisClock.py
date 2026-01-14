@@ -47,7 +47,7 @@ def set_schedule():
     MESSAGES = ["ict.gctaa.net"]
     # checks for if the button is pressed
     # if it is changes daytype
-    if not btn_up.value: 
+    if not btn_up.value and timer_end == None: 
         daytype += 1
         if daytype > 3:
             daytype = 1
