@@ -256,6 +256,7 @@ def main():
     global MovingMessageUpdate
 
     last_timer_update = 0
+    last_date_update = 0
      
     # Initial setup
     connect_wifi()
@@ -266,12 +267,18 @@ def main():
     while True:
         set_schedule()
         manage_timer_time()
+
+        # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
+        if time.localtime().tm_mday != last_date_update:
+            connect_wifi()
+            sync_ntp_time()
+            last_date_update = time.localtime().tm_mday
         # If there is time in the timer show it
-        if timer_end is not None:
-            now = time.monotonic()
-            if now - last_timer_update >= 1:
-                last_timer_update = now
-                remaining = int(timer_end - now)
+        elif timer_end is not None:
+            TimePassed = time.monotonic()
+            if TimePassed - last_timer_update >= 1:
+                last_timer_update = TimePassed
+                remaining = int(timer_end - TimePassed)
 
                 if remaining <= 0:
                     matrixportal.set_text("Timer Done!", 2) 
@@ -284,7 +291,6 @@ def main():
 
                     matrixportal.set_text("Time Left:", 2)
                     matrixportal.set_text(f"{minutes:02d}:{seconds:02d}", 1)
-            time.sleep(1)
         elif(MovingMessageUpdate == True):
             # Update scrolling message
             MovingMessage = MESSAGES[message_index]
@@ -306,7 +312,9 @@ def main():
             # matrixportal.set_text(info_text, 1)
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
-            time.sleep(1)
+            print(time.localtime().tm_mday)
+            print(last_date_update)
+        time.sleep(1)
 
     print("done")
 

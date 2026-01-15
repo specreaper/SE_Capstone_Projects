@@ -292,6 +292,7 @@ def main():
     #Time Related Stuff
     time_index = 0
     last_timer_update = 0
+    last_date_update = 0
      
     # Initial setup
     connect_wifi()
@@ -302,12 +303,18 @@ def main():
     while True:
         set_schedule()
         manage_timer_time()
+
+        # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
+        if time.localtime().tm_mday != last_date_update:
+            connect_wifi()
+            sync_ntp_time()
+            last_date_update = time.localtime().tm_mday
         # If there is time in the timer show it
-        if timer_end is not None:
-            now = time.monotonic()
-            if now - last_timer_update >= 1:
-                last_timer_update = now
-                remaining = int(timer_end - now)
+        elif timer_end is not None:
+            TimePassed = time.monotonic()
+            if TimePassed - last_timer_update >= 1:
+                last_timer_update = TimePassed
+                remaining = int(timer_end - TimePassed)
 
                 if remaining <= 0:
                     matrixportal.set_text("Timer Done!", 0)
@@ -351,6 +358,7 @@ def main():
                     matrixportal.set_text(get_current_datetime()[1], 1)
 
                 time_index = (time_index + 1) % 2
+                last_date_update = time.localtime().tm_mday
 
                 # Scroll delay
                 scroll_speed_update()
