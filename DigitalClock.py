@@ -302,7 +302,7 @@ def main():
     global color_index
     global timer_end
 
-    #Time Related Stuff
+    #Time related variables
     time_index = 0
     last_timer_update = 0
     last_date_update = 0
