@@ -298,9 +298,10 @@ def setup_display():
 
 def main():
     #Calling global variables
-    global message_index
     global color_index
+    global message_index
     global timer_end
+    global MovingMessageUpdate
 
     #Time related variables
     time_index = 0
