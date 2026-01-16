@@ -10,6 +10,15 @@ import random # type: ignore
 import digitalio # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
+# Function Configs
+# Enter 1 to have Chris's Perffered Format
+# Enter 2 to have Jeff's Perffered Format
+ClockFormat = 1 
+# True to turn on the first five minute and false to turn off
+FirstFive = True 
+# The rotation of the screen
+Rotation = 180
+
 print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
@@ -23,20 +32,21 @@ btn_down.pull = digitalio.Pull.UP  # enable internal pull-up
 
 # Initialize MatrixPortal
 matrixportal = MatrixPortal(status_neopixel=board.NEOPIXEL, debug=False)
-matrixportal.graphics.display.rotation = 180
+matrixportal.graphics.display.rotation = Rotation
 # Matrix configuration
 MATRIX_WIDTH = matrixportal.graphics.display.width
 MATRIX_HEIGHT = 32
-SCROLL_DELAY = 0
+SCROLL_DELAY = 0.01
 message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
+MovingMessageUpdate = False 
 
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
-daytype = 1
 MESSAGES = []
+daytype = 1
 
 # This is for getting and changing the schedule
 def set_schedule():
@@ -44,13 +54,17 @@ def set_schedule():
     global class_start_times
     global daytype
     global MESSAGES
-    MESSAGES = ["ict.gctaa.net"]
+    global MovingMessageUpdate
+    if ClockFormat == 1:
+        MESSAGES = ["ict.gctaa.net"]
+        MovingMessageUpdate = True
     # checks for if the button is pressed
     # if it is changes daytype
     if not btn_up.value and timer_end == None: 
         daytype += 1
         if daytype > 3:
             daytype = 1
+        MovingMessageUpdate = True
     
     #Checks if daytype is a Regular Bell Schedule and sets it up if it is
     if daytype == 1:
@@ -235,7 +249,6 @@ def scroll_speed_update():
 
     global SCROLL_DELAY
     SCROLL_DURATION = 5.0
-    SCROLL_DELAY = 0.03 
     line_width = (
             matrixportal._text[matrixportal._scrolling_index]["label"].bounding_box[2]
             * matrixportal._text[matrixportal._scrolling_index]["scale"]
@@ -309,6 +322,7 @@ def main():
             connect_wifi()
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
+        
         # If there is time in the timer show it
         elif timer_end is not None:
             TimePassed = time.monotonic()
@@ -330,38 +344,57 @@ def main():
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"{minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
-        else:
-            first_5_mins = is_first_5_mins()
-            if first_5_mins != -1:
+        
+        # If FirstFive is on run it
+        elif(FirstFive == True):
+            first_5_mins = is_first_5_mins()    
+            if(first_5_mins != -1):
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
+
+        # Checks for if a there is a scrolling message to show or not
+        elif(MovingMessageUpdate == True):
+            # Update scrolling message
+            MovingMessage = MESSAGES[message_index]
+            print(MovingMessage)
+            matrixportal.set_text(MovingMessage, 0)
+            message_index = (message_index + 1) % len(MESSAGES)
+            MovingMessageUpdate = False
+            matrixportal.set_text_color(random.choice(list(COLORS.values())))
+            matrixportal.set_text("           ", 2) # clear top static line
+
+            # Scroll delay
+            scroll_speed_update()
+            matrixportal.scroll_text(SCROLL_DELAY)
+            # Update info line
+            # date_str, time_str = get_current_datetime()
+            # weather_str = get_weather()
+            # info_text = f"{date_str} | {time_str} | {weather_str}"
+            # info_text = f"{time_str}"
+            # matrixportal.set_text(info_text, 1)
+
+        # If 1 use Chris's prefered format
+        elif ClockFormat == 1:
+            if time_index == 0:
+                matrixportal.set_text(time_remaining(), 1)
             else:
-                # Update scrolling message
-                MovingMessage = MESSAGES[message_index]
-                print(MovingMessage)
-                matrixportal.set_text(MovingMessage, 0)
-                message_index = (message_index + 1) % len(MESSAGES)
+                matrixportal.set_text(get_current_datetime()[1], 1)
+            time_index = (time_index + 1) % 2
 
-                matrixportal.set_text_color(random.choice(list(COLORS.values())))
+            # Scroll delay
+            scroll_speed_update()
+            matrixportal.scroll_text(SCROLL_DELAY)
+        
+        # If 2 use Jeff's prefered format
+        elif ClockFormat == 2:
+            matrixportal.set_text(get_current_datetime()[1], 2)
+            matrixportal.set_text(time_remaining(), 1)
+            print(time.localtime().tm_mday)
+            print(last_date_update)
+            time.sleep(1)
 
-                # Update info line
-                # date_str, time_str = get_current_datetime()
-                # weather_str = get_weather()
-                # info_text = f"{date_str} | {time_str} | {weather_str}"
-                # info_text = f"{time_str}"
-                # matrixportal.set_text(info_text, 1)
-                if time_index == 0:
-                    matrixportal.set_text(time_remaining(), 1)
-                else:
-                    matrixportal.set_text(get_current_datetime()[1], 1)
-
-                time_index = (time_index + 1) % 2
-
-                # Scroll delay
-                scroll_speed_update()
-                matrixportal.scroll_text(SCROLL_DELAY)
 
     print("done")
 
