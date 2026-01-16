@@ -57,7 +57,7 @@ def set_schedule():
     global MovingMessageUpdate
     if ClockFormat == 1:
         MESSAGES = ["ict.gctaa.net"]
-        MovingMessageUpdate = True
+    
     # checks for if the button is pressed
     # if it is changes daytype
     if not btn_up.value and timer_end == None: 
@@ -313,25 +313,31 @@ def main():
     sync_ntp_time()
     setup_display()
 
+    if(ClockFormat == 1):
+        MovingMessageUpdate = True
+
     # Main loop
     while True:
         set_schedule()
         manage_timer_time()
+        first_5_mins = is_first_5_mins()
 
         # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
-        if time.localtime().tm_mday != last_date_update:
+        if(time.localtime().tm_mday != last_date_update):
             connect_wifi()
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
+            print("Resynced")
+            continue
         
         # If there is time in the timer show it
-        elif timer_end is not None:
+        elif(timer_end is not None):
             TimePassed = time.monotonic()
-            if TimePassed - last_timer_update >= 1:
+            if(TimePassed - last_timer_update >= 1):
                 last_timer_update = TimePassed
                 remaining = int(timer_end - TimePassed)
 
-                if remaining <= 0:
+                if(remaining <= 0):
                     matrixportal.set_text("Timer Done!", 0)
                     matrixportal.set_text("           ", 2) # clear bottom static line
                     matrixportal.set_text("           ", 1) # clear top static line
@@ -347,13 +353,12 @@ def main():
             time.sleep(1)
         
         # If FirstFive is on run it
-        elif(FirstFive == True):
-            first_5_mins = is_first_5_mins()    
-            if(first_5_mins != -1):
+        elif(FirstFive == True and first_5_mins != -1):
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
+            
 
         # Checks for if a there is a scrolling message to show or not
         elif(MovingMessageUpdate == True):
@@ -377,7 +382,7 @@ def main():
             # matrixportal.set_text(info_text, 1)
 
         # If 1 use Chris's prefered format
-        elif ClockFormat == 1:
+        elif(ClockFormat == 1):
             if time_index == 0:
                 matrixportal.set_text(time_remaining(), 1)
             else:
@@ -389,13 +394,10 @@ def main():
             matrixportal.scroll_text(SCROLL_DELAY)
         
         # If 2 use Jeff's prefered format
-        elif ClockFormat == 2:
+        elif(ClockFormat == 2):
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
-            print(time.localtime().tm_mday)
-            print(last_date_update)
             time.sleep(1)
-
 
     print("done")
 
