@@ -358,7 +358,6 @@ def main():
                     matrixportal.set_text(get_current_datetime()[1], 1)
 
                 time_index = (time_index + 1) % 2
-                last_date_update = time.localtime().tm_mday
 
                 # Scroll delay
                 scroll_speed_update()
