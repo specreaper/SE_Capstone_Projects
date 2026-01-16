@@ -313,6 +313,9 @@ def main():
     sync_ntp_time()
     setup_display()
 
+    # This is a band-aid solution that solves a problem of 
+    # Which is if MovingMessageUpdate default value is False its will break Crhis Format
+    # If its default is True it will break Jeff Format
     if(ClockFormat == 1):
         MovingMessageUpdate = True
 
