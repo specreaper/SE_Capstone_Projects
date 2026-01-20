@@ -40,7 +40,7 @@ SCROLL_DELAY = 0.01
 message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
-MovingMessageUpdate = False 
+MovingMessageUpdate = True 
 
 #Set up variables for the bell schedule
 bell_times = []
@@ -310,12 +310,6 @@ def main():
     connect_wifi()
     sync_ntp_time()
     setup_display()
-
-    # This is a band-aid solution that solves a problem of 
-    # Which is if MovingMessageUpdate default value is False its will break Crhis Format
-    # If its default is True it will break Jeff Format
-    if(ClockFormat == 1):
-        MovingMessageUpdate = True
 
     # Main loop
     while True:
