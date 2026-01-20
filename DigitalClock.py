@@ -333,10 +333,10 @@ def main():
                 remaining = int(timer_end - TimePassed)
 
                 if(remaining <= 0):
-                    matrixportal.set_text("Timer Done!", 0)
-                    matrixportal.set_text("           ", 2) # clear bottom static line
-                    matrixportal.set_text("           ", 1) # clear top static line
+                    matrixportal.set_text("Timer Done!", 2) 
+                    matrixportal.set_text("           ", 1) # clear bottom static line
                     timer_end = None  # stop timer
+                    time.sleep(3)
                     scroll_speed_update()
                     matrixportal.scroll_text(SCROLL_DELAY)
                 else:
