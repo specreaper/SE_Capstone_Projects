@@ -45,7 +45,7 @@ MovingMessageUpdate = False
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
-MESSAGES = []
+MESSAGES = ["Clock On"]
 daytype = 1
 
 # This is for getting and changing the schedule
@@ -55,8 +55,6 @@ def set_schedule():
     global daytype
     global MESSAGES
     global MovingMessageUpdate
-    if ClockFormat == 1:
-        MESSAGES = ["ict.gctaa.net"]
     
     # checks for if the button is pressed
     # if it is changes daytype
@@ -386,6 +384,8 @@ def main():
 
         # If 1 use Chris's prefered format
         elif(ClockFormat == 1):
+            matrixportal.set_text("ict.gctaa.net", 0)
+            matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
                 matrixportal.set_text(time_remaining(), 1)
             else:
