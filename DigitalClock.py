@@ -15,9 +15,11 @@ from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 # Enter 2 to have Jeff's Perffered Format
 ClockFormat = 1 
 # True to turn on the first five minute and false to turn off
-FirstFive = True 
+FIRSTFIVE = True 
 # The rotation of the screen
 Rotation = 180
+# Back to school night toggle
+BTSN = False
 
 print('testing')
 # Setup button input up
@@ -91,10 +93,12 @@ def set_schedule():
         if not btn_up.value:
             MESSAGES = ["2-Hour Delay Schedule"] 
     
-    #Add this part for BTSN
-    bell_times = bell_times+["18:00", "18:15", "18:20", "18:30", "18:35", "18:45", "18:50"
+    if BTSN == True:
+        #Add this part for BTSN
+        bell_times = (bell_times + 
+                            ["18:00", "18:15", "18:20", "18:30", "18:35", "18:45", "18:50"
              ,"19:00", "19:05", "19:15", "19:20", "19:30", "19:35", "19:45"
-             ,"19:50", "20:00"]
+             ,"19:50", "20:00"])
 
 
 def manage_timer_time():
@@ -348,7 +352,7 @@ def main():
             time.sleep(1)
         
         # If FirstFive is on run it
-        elif(FirstFive == True and first_5_mins != -1):
+        elif(FIRSTFIVE == True and first_5_mins != -1):
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
