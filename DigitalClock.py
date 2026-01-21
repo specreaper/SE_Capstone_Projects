@@ -10,6 +10,12 @@ import random # type: ignore
 import digitalio # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
+# New Libraries
+import ssl 
+import storage # type: ignore
+import supervisor # type: ignore
+import adafruit_requests # type: ignore
+
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
 # Enter 2 to have Jeff's Perffered Format
