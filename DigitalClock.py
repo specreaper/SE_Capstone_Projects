@@ -230,7 +230,7 @@ def time_remaining():
 
     # If no future bell times found
     if next_bell_minutes is None:
-        return "           "
+        return "Study Hard"
 
     # Calculate time difference in seconds
     time_diff_seconds = (next_bell_minutes * 60) - current_seconds
