@@ -26,6 +26,8 @@ FIRSTFIVE = True
 Rotation = 180
 # Back to school night toggle
 BTSN = False
+# Where fetch code from
+UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/ClockTest.py"
 
 print('testing')
 # Setup button input up
@@ -49,12 +51,103 @@ message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
 MovingMessageUpdate = True 
+FORCE_UPDATE = False
 
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
 MESSAGES = ["Clock On"]
 daytype = 1
+
+def filesystem_writable():
+    # Ensure CIRCUITPY filesystem is writable.
+    try:
+        storage.remount("/", readonly=False)
+        return True
+    except Exception as e:
+        print("Could not remount writable:", e)
+        return False
+
+def safe_replace(src_path, dst_path):
+    # Replace dst_path with src_path (best-effort on FAT).
+    try:
+        os.remove(dst_path)
+    except OSError:
+        pass
+    os.rename(src_path, dst_path)
+
+def download_text(timeout = 10.0):
+    # Download text file over HTTPS.
+    pool = socketpool.SocketPool(wifi.radio)
+    context = ssl.create_default_context()
+    requests = adafruit_requests.Session(pool, context)
+
+    print("Fetching update:", UPDATE_URL)
+    r = requests.get(UPDATE_URL, timeout=timeout)  # if your build errors, remove timeout=
+    try:
+        if r.status_code != 200:
+            raise RuntimeError("HTTP %d" % r.status_code)
+        return r.text
+    finally:
+        r.close()
+
+def maybe_update_code_py():
+    # If UPDATE_URL is set in settings.toml, fetch that URL and replace /code.py. 
+    # Reboots on success.
+
+    if not UPDATE_URL:
+        print("No UPDATE_URL set; skipping OTA update.")
+        return
+
+    if not filesystem_writable():
+        print("Filesystem not writable; skipping OTA update.")
+        return
+
+    try:
+        new_code = download_text()
+    except Exception as e:
+        print("OTA fetch failed:", e)
+        return
+
+    # Basic sanity checks to avoid replacing code.py with empty/garbage
+    if not new_code or len(new_code) < 50:
+        print("Downloaded code too small; refusing update.")
+        return
+    if "<html" in new_code.lower():
+        print("Downloaded HTML page; refusing update.")
+        return
+
+    # Optional: skip if identical
+    if not FORCE_UPDATE:
+        try:
+            with open("/code.py", "r") as f:
+                old_code = f.read()
+            if old_code == new_code:
+                print("OTA: no changes detected.")
+                return
+        except Exception:
+            pass
+
+    tmp_path = "/code.py.new"
+    try:
+        print("Writing", tmp_path)
+        with open(tmp_path, "w") as f:
+            f.write(new_code)
+            f.flush()
+
+        print("Replacing /code.py")
+        safe_replace(tmp_path, "/code.py")
+
+        print("OTA update complete reloading")
+        time.sleep(0.5)
+        supervisor.reload()
+
+    except Exception as e:
+        print("OTA write/replace failed:", e)
+        try:
+            os.remove(tmp_path)
+        except OSError:
+            pass
 
 # This is for getting and changing the schedule
 def set_schedule():
@@ -319,6 +412,7 @@ def main():
     # Initial setup
     connect_wifi()
     sync_ntp_time()
+    maybe_update_code_py()
     setup_display()
 
     # Main loop
