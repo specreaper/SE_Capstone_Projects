@@ -77,14 +77,14 @@ def safe_replace(src_path, dst_path):
         pass
     os.rename(src_path, dst_path)
 
-def download_text(timeout = 10.0):
+def download_text():
     # Download text file over HTTPS.
     pool = socketpool.SocketPool(wifi.radio)
     context = ssl.create_default_context()
     requests = adafruit_requests.Session(pool, context)
 
     print("Fetching update:", UPDATE_URL)
-    r = requests.get(UPDATE_URL, timeout=timeout)  # if your build errors, remove timeout=
+    r = requests.get(UPDATE_URL)
     try:
         if r.status_code != 200:
             raise RuntimeError("HTTP %d" % r.status_code)
@@ -95,13 +95,13 @@ def download_text(timeout = 10.0):
 # This is for getting old code after line X
 def file_tail_from_line(path):
     with open(path, "r") as f:
-        for i in range(START_LINE - 1):
+        for i in range(START_LINE):
             f.readline()  
         return f.read()  
 
 # This is for getting new code after line X
 def text_tail_from_line(text):
-    return "".join(text.splitlines(True)[START_LINE - 1:])
+    return "".join(text.splitlines(True)[START_LINE:])
 
 def remote_update():
     if not UPDATE_URL:
@@ -124,8 +124,8 @@ def remote_update():
 
     # Skip if identical
     try:
-        old_tail = file_tail_from_line("/code.py", START_LINE) 
-        new_tail = text_tail_from_line(new_code, START_LINE)
+        old_tail = file_tail_from_line("/code.py") 
+        new_tail = text_tail_from_line(new_code)
 
         if old_tail == new_tail:
             print("OTA: no changes detected.")
@@ -417,12 +417,12 @@ def main():
      
     # Initial setup
     connect_wifi()
+    remote_update()
     sync_ntp_time()
     setup_display()
 
     # Main loop
     while True:
-        remote_update()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
