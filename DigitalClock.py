@@ -42,7 +42,7 @@ btn_down.pull = digitalio.Pull.UP  # enable internal pull-up
 
 # Initialize MatrixPortal
 matrixportal = MatrixPortal(status_neopixel=board.NEOPIXEL, debug=False)
-matrixportal.graphics.display.rotation = Rotation
+matrixportal.graphics.display.rotation = rotation
 # Matrix configuration
 MATRIX_WIDTH = matrixportal.graphics.display.width
 MATRIX_HEIGHT = 32
