@@ -27,7 +27,7 @@ BTSN = False
 # Where fetch code from
 UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
 # After what line do you want to check for changes in the code
-START_LINE = 31 # it starts checking for changes after the line number you enter
+SKIP_LINES = 31 # ignore first 31 lines, compare the rest
 
 print('testing')
 # Setup button input up
@@ -95,13 +95,13 @@ def download_text():
 # This is for getting old code after line X
 def file_tail_from_line(path):
     with open(path, "r") as f:
-        for i in range(START_LINE):
+        for i in range(SKIP_LINES):
             f.readline()  
         return f.read()  
 
 # This is for getting new code after line X
 def text_tail_from_line(text):
-    return "".join(text.splitlines(True)[START_LINE:])
+    return "".join(text.splitlines(True)[SKIP_LINES:])
 
 def remote_update():
     if not UPDATE_URL:
@@ -124,8 +124,8 @@ def remote_update():
 
     # Skip if identical
     try:
-        old_tail = file_tail_from_line("/code.py") 
-        new_tail = text_tail_from_line(new_code)
+        old_tail = file_tail_from_line("/code.py").rstrip()
+        new_tail = text_tail_from_line(new_code).rstrip()
 
         if old_tail == new_tail:
             print("OTA: no changes detected.")
