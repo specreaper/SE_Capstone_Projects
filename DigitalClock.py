@@ -17,7 +17,7 @@ from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
 # Enter 2 to have Jeff's Perffered Format
-clock_format = 0 
+clock_format = 1 
 # True to turn on the first five minute and false to turn off
 FIRST_FIVE = True 
 # The rotation of the screen
@@ -488,7 +488,7 @@ def main():
 
         # If 1 use Chris's prefered format
         elif(clock_format == 1):
-            matrixportal.set_text("ict.gctaa.net", 0)
+            matrixportal.set_text("ict.gctaa", 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
                 matrixportal.set_text(time_remaining(), 1)
