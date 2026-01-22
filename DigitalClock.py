@@ -488,7 +488,7 @@ def main():
 
         # If 1 use Chris's prefered format
         elif(clock_format == 1):
-            matrixportal.set_text("ict.gctaa.net", 0)
+            matrixportal.set_text("ict.gctaa", 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
                 matrixportal.set_text(time_remaining(), 1)
