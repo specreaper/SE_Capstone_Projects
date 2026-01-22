@@ -17,7 +17,7 @@ from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
 # Enter 2 to have Jeff's Perffered Format
-clock_format = 1 
+clock_format = 0 
 # True to turn on the first five minute and false to turn off
 FIRST_FIVE = True 
 # The rotation of the screen
