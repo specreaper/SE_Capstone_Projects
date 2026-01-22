@@ -124,10 +124,15 @@ def remote_update():
 
     # Skip if identical
     try:
+        """
         old_tail = file_tail_from_line("/code.py").rstrip()
         new_tail = text_tail_from_line(new_code).rstrip()
 
         if old_tail == new_tail:
+        """
+        with open("/code.py", "r") as f:
+                old_code = f.read()
+        if old_code == new_code:
             print("OTA: no changes detected.")
             return
     except Exception:
