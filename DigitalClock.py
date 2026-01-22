@@ -17,17 +17,17 @@ from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
 # Enter 2 to have Jeff's Perffered Format
-ClockFormat = 1 
+clock_format = 1 
 # True to turn on the first five minute and false to turn off
-FIRSTFIVE = True 
+FIRST_FIVE = True 
 # The rotation of the screen
-Rotation = 180
+rotation = 180
 # Back to school night toggle
 BTSN = False 
 # Where fetch code from
 UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
 # After what line do you want to check for changes in the code
-STARTLINE = 31 # it starts checking for changes after the line number you enter
+START_LINE = 31 # it starts checking for changes after the line number you enter
 
 print('testing')
 # Setup button input up
@@ -50,7 +50,7 @@ SCROLL_DELAY = 0.01
 message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
-MovingMessageUpdate = True
+moving_message_update = True
 
 #Set up variables for the bell schedule
 bell_times = []
@@ -93,17 +93,17 @@ def download_text(timeout = 10.0):
         r.close()
 
 # This is for getting old code after line X
-def FileTailFromLine(path):
+def file_tail_from_line(path):
     with open(path, "r") as f:
-        for _ in range(STARTLINE - 1):
+        for i in range(START_LINE - 1):
             f.readline()  
         return f.read()  
 
 # This is for getting new code after line X
-def TextTailFromLine(text):
-    return "".join(text.splitlines(True)[STARTLINE - 1:])
+def text_tail_from_line(text):
+    return "".join(text.splitlines(True)[START_LINE - 1:])
 
-def RemoteUpdate():
+def remote_update():
     if not UPDATE_URL:
         print("No UPDATE_URL set; skipping OTA update.")
         return
@@ -113,21 +113,21 @@ def RemoteUpdate():
         return
 
     try:
-        NewCode = download_text()
+        new_code = download_text()
     except Exception as e:
         print("OTA fetch failed:", e)
         return
 
-    if "<html" in NewCode.lower():
+    if "<html" in new_code.lower():
         print("Downloaded HTML page; refusing update.")
         return
 
     # Skip if identical
     try:
-        OldTail = FileTailFromLine("/code.py", STARTLINE) 
-        NewTail = TextTailFromLine(NewCode, STARTLINE)
+        old_tail = file_tail_from_line("/code.py", START_LINE) 
+        new_tail = text_tail_from_line(new_code, START_LINE)
 
-        if OldTail == NewTail:
+        if old_tail == new_tail:
             print("OTA: no changes detected.")
             return
     except Exception:
@@ -138,7 +138,7 @@ def RemoteUpdate():
     try:
         print("Writing", tmp_path)
         with open(tmp_path, "w") as f:
-            f.write(NewCode)
+            f.write(new_code)
             f.flush()
 
         print("Replacing /code.py")
@@ -161,7 +161,7 @@ def set_schedule():
     global class_start_times
     global daytype
     global MESSAGES
-    global MovingMessageUpdate
+    global moving_message_update
     
     # checks for if the button is pressed
     # if it is changes daytype
@@ -169,7 +169,7 @@ def set_schedule():
         daytype += 1
         if daytype > 3:
             daytype = 1
-        MovingMessageUpdate = True
+        moving_message_update = True
     
     #Checks if daytype is a Regular Bell Schedule and sets it up if it is
     if daytype == 1:
@@ -408,7 +408,7 @@ def main():
     global color_index
     global message_index
     global timer_end
-    global MovingMessageUpdate
+    global moving_message_update
 
     #Time related variables
     time_index = 0
@@ -422,7 +422,7 @@ def main():
 
     # Main loop
     while True:
-        RemoteUpdate()
+        remote_update()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
@@ -458,7 +458,7 @@ def main():
             time.sleep(1)
         
         # If FirstFive is on run it
-        elif(FIRSTFIVE == True and first_5_mins != -1):
+        elif(FIRST_FIVE == True and first_5_mins != -1):
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
@@ -466,13 +466,13 @@ def main():
             
 
         # Checks for if a there is a scrolling message to show or not
-        elif(MovingMessageUpdate == True):
+        elif(moving_message_update == True):
             # Update scrolling message
-            MovingMessage = MESSAGES[message_index]
-            print(MovingMessage)
-            matrixportal.set_text(MovingMessage, 0)
+            moving_message = MESSAGES[message_index]
+            print(moving_message)
+            matrixportal.set_text(moving_message, 0)
             message_index = (message_index + 1) % len(MESSAGES)
-            MovingMessageUpdate = False
+            moving_message_update = False
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             matrixportal.set_text("           ", 2) # clear top static line
 
@@ -487,7 +487,7 @@ def main():
             # matrixportal.set_text(info_text, 1)
 
         # If 1 use Chris's prefered format
-        elif(ClockFormat == 1):
+        elif(clock_format == 1):
             matrixportal.set_text("ict.gctaa.net", 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
@@ -501,7 +501,7 @@ def main():
             matrixportal.scroll_text(SCROLL_DELAY)
         
         # If 2 use Jeff's prefered format
-        elif(ClockFormat == 2):
+        elif(clock_format == 2):
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
