@@ -23,7 +23,7 @@ FIRSTFIVE = True
 # The rotation of the screen
 Rotation = 180
 # Back to school night toggle
-BTSN = False
+BTSN = False 
 # Where fetch code from
 UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
 # After what line do you want to check for changes in the code
