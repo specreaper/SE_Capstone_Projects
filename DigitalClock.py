@@ -25,7 +25,7 @@ rotation = 180
 # Back to school night toggle
 BTSN = False 
 # Where fetch code from
-UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
+UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/refs/heads/main/DigitalClock.py"
 # After what line do you want to check for changes in the code
 SKIP_LINES = 31 # ignore first 31 lines, compare the rest
 
