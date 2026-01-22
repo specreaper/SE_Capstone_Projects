@@ -26,6 +26,8 @@ Rotation = 180
 BTSN = False
 # Where fetch code from
 UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
+# After what line do you want to check for changes in the code
+STARTLINE = 31 # it starts checking for changes after the line number you enter
 
 print('testing')
 # Setup button input up
@@ -48,8 +50,7 @@ SCROLL_DELAY = 0.01
 message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
-MovingMessageUpdate = True 
-FORCE_UPDATE = False
+MovingMessageUpdate = True
 
 #Set up variables for the bell schedule
 bell_times = []
@@ -91,9 +92,18 @@ def download_text(timeout = 10.0):
     finally:
         r.close()
 
-def RemoteUpdate():
-    # Reboots on success.
+# This is for getting old code after line X
+def FileTailFromLine(path):
+    with open(path, "r") as f:
+        for _ in range(STARTLINE - 1):
+            f.readline()  
+        return f.read()  
 
+# This is for getting new code after line X
+def TextTailFromLine(text):
+    return "".join(text.splitlines(True)[STARTLINE - 1:])
+
+def RemoteUpdate():
     if not UPDATE_URL:
         print("No UPDATE_URL set; skipping OTA update.")
         return
@@ -103,35 +113,32 @@ def RemoteUpdate():
         return
 
     try:
-        new_code = download_text()
+        NewCode = download_text()
     except Exception as e:
         print("OTA fetch failed:", e)
         return
 
-    # Basic sanity checks to avoid replacing code.py with empty/garbage
-    if not new_code or len(new_code) < 50:
-        print("Downloaded code too small; refusing update.")
-        return
-    if "<html" in new_code.lower():
+    if "<html" in NewCode.lower():
         print("Downloaded HTML page; refusing update.")
         return
 
-    # Optional: skip if identical
-    if not FORCE_UPDATE:
-        try:
-            with open("/code.py", "r") as f:
-                old_code = f.read()
-            if old_code == new_code:
-                print("OTA: no changes detected.")
-                return
-        except Exception:
-            pass
+    # Skip if identical
+    try:
+        OldTail = FileTailFromLine("/code.py", STARTLINE) 
+        NewTail = TextTailFromLine(NewCode, STARTLINE)
 
+        if OldTail == NewTail:
+            print("OTA: no changes detected.")
+            return
+    except Exception:
+        pass
+    
+    # Replaces the old code with new code
     tmp_path = "/code.py.new"
     try:
         print("Writing", tmp_path)
         with open(tmp_path, "w") as f:
-            f.write(new_code)
+            f.write(NewCode)
             f.flush()
 
         print("Replacing /code.py")
@@ -411,11 +418,11 @@ def main():
     # Initial setup
     connect_wifi()
     sync_ntp_time()
-    # maybe_update_code_py()
     setup_display()
 
     # Main loop
     while True:
+        RemoteUpdate()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
