@@ -8,13 +8,11 @@ import terminalio# type: ignore
 import rtc # type: ignore
 import random # type: ignore
 import digitalio # type: ignore
-from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
-
-# New Libraries
 import ssl 
 import storage # type: ignore
 import supervisor # type: ignore
 import adafruit_requests # type: ignore
+from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
@@ -27,7 +25,7 @@ Rotation = 180
 # Back to school night toggle
 BTSN = False
 # Where fetch code from
-UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/ClockTest.py"
+UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/main/DigitalClock.py"
 
 print('testing')
 # Setup button input up
@@ -62,8 +60,10 @@ daytype = 1
 def filesystem_writable():
     # Ensure CIRCUITPY filesystem is writable.
     try:
+        # Checks if file is writable
         storage.remount("/", readonly=False)
         return True
+    # Checks if there is an error
     except Exception as e:
         print("Could not remount writable:", e)
         return False
@@ -91,8 +91,7 @@ def download_text(timeout = 10.0):
     finally:
         r.close()
 
-def maybe_update_code_py():
-    # If UPDATE_URL is set in settings.toml, fetch that URL and replace /code.py. 
+def RemoteUpdate():
     # Reboots on success.
 
     if not UPDATE_URL:
@@ -412,7 +411,7 @@ def main():
     # Initial setup
     connect_wifi()
     sync_ntp_time()
-    maybe_update_code_py()
+    # maybe_update_code_py()
     setup_display()
 
     # Main loop
