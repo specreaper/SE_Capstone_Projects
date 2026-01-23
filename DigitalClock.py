@@ -415,6 +415,7 @@ def main():
         # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
         if(time.localtime().tm_mday != last_date_update):
             connect_wifi()
+            remote_update()
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
             print("Resynced")
