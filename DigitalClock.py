@@ -15,11 +15,11 @@ import adafruit_requests # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
 clock_format = os.getenv("clock_format")
-FIRST_FIVE = os.getenv("FIRST_FIVE")
+FIRST_FIVE = bool(os.getenv("FIRST_FIVE"))
 rotation = os.getenv("rotation")
-BTSN = os.getenv("BTSN")
+BTSN = bool(os.getenv("BTSN"))
 UPDATE_URL = os.getenv("UPDATE_URL")
-AUTO_UPDATE = os.getenv("AUTO_UPDATE")
+AUTO_UPDATE = bool(os.getenv("AUTO_UPDATE"))
 
 print('testing')
 # Setup button input up
