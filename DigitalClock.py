@@ -19,6 +19,7 @@ FIRST_FIVE = os.getenv("FIRST_FIVE")
 rotation = os.getenv("rotation")
 BTSN = os.getenv("BTSN")
 UPDATE_URL = os.getenv("UPDATE_URL")
+AUTO_UPDATE = os.getenv("AUTO_UPDATE")
 
 print('testing')
 # Setup button input up
@@ -405,6 +406,9 @@ def main():
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
+
+        #if(AUTO_UPDATE == True):
+        #    remote_update()
 
         # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
         if(time.localtime().tm_mday != last_date_update):
