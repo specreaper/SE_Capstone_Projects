@@ -14,6 +14,12 @@ import supervisor # type: ignore
 import adafruit_requests # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
+clock_format = os.getenv("clock_format")
+FIRST_FIVE = os.getenv("FIRST_FIVE")
+rotation = os.getenv("rotation")
+BTSN = os.getenv("BTSN")
+UPDATE_URL = os.getenv("UPDATE_URL")
+
 print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
