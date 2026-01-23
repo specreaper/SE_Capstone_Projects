@@ -14,6 +14,7 @@ import supervisor # type: ignore
 import adafruit_requests # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
+# Gets the prefrences from the settings.toml / settings.env
 clock_format = os.getenv("clock_format")
 FIRST_FIVE = bool(os.getenv("FIRST_FIVE"))
 rotation = os.getenv("rotation")
@@ -95,6 +96,7 @@ def remote_update():
 
     try:
         new_code = download_text()
+    # Checks for downloading error
     except Exception as e:
         print("OTA fetch failed:", e)
         return
@@ -202,7 +204,7 @@ def manage_timer_time():
     elif not btn_up.value and timer_end is not None:
         timer_end -= TIMER_DURATION
 
-
+# This is for the first five minutes
 def is_first_5_mins():
     now = time.localtime()
     if now.tm_hour == 0:
@@ -239,7 +241,7 @@ def is_first_5_mins():
 
 
 def connect_wifi():
-    """Connect to WiFi using settings.toml credentials"""
+    # Connect to WiFi using settings.toml credentials
     print("Connecting to WiFi...")
     isConnected = False
     while not isConnected:
@@ -257,7 +259,7 @@ def connect_wifi():
     print("IP:", wifi.radio.ipv4_address)
 
 def sync_ntp_time():
-    """Sync time using NTP server directly"""
+    # Sync time using NTP server directly
     try:
         pool = socketpool.SocketPool(wifi.radio)
         ntp = adafruit_ntp.NTP(pool, tz_offset=get_timezone_offset())
@@ -269,14 +271,14 @@ def sync_ntp_time():
         print("Failed to sync time:", e)
 
 def get_timezone_offset():
-    """Calculate timezone offset in hours"""
+    # Calculate timezone offset in hours
     tz = os.getenv("TIMEZONE", "UTC")
     if "New_York" in tz:
         return -5  # EDT
     return 0  # Default to UTC
 
 def get_current_datetime():
-    """Return formatted date and time strings"""
+    # Return formatted date and time strings
     now = time.localtime()
     date_str = f"{now.tm_mon}/{now.tm_mday}/{now.tm_year % 100}"
     hour = now.tm_hour % 12 or 12  # Convert 0 to 12
