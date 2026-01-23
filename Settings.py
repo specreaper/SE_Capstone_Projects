@@ -1,4 +1,5 @@
-# This is where all the toggales will be put.
+# This is where all the toggales that will go into settings.toml
+
 # Function Configs
 # Enter 1 to have Chris's Perffered Format
 # Enter 2 to have Jeff's Perffered Format
