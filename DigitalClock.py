@@ -465,12 +465,6 @@ def main():
             # Scroll delay
             scroll_speed_update()
             matrixportal.scroll_text(SCROLL_DELAY)
-            # Update info line
-            # date_str, time_str = get_current_datetime()
-            # weather_str = get_weather()
-            # info_text = f"{date_str} | {time_str} | {weather_str}"
-            # info_text = f"{time_str}"
-            # matrixportal.set_text(info_text, 1)
 
         # If 1 use Chris's prefered format
         elif(clock_format == 1):
