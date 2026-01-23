@@ -14,21 +14,6 @@ import supervisor # type: ignore
 import adafruit_requests # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
-# Function Configs
-# Enter 1 to have Chris's Perffered Format
-# Enter 2 to have Jeff's Perffered Format
-clock_format = 1 
-# True to turn on the first five minute and false to turn off
-FIRST_FIVE = True 
-# The rotation of the screen
-rotation = 180
-# Back to school night toggle
-BTSN = False 
-# Where fetch code from
-UPDATE_URL = "https://raw.githubusercontent.com/specreaper/SE_Capstone_Projects/refs/heads/main/DigitalClock.py"
-# After what line do you want to check for changes in the code
-SKIP_LINES = 31 # ignore first 31 lines, compare the rest
-
 print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
@@ -92,17 +77,6 @@ def download_text():
     finally:
         r.close()
 
-# This is for getting old code after line X
-def file_tail_from_line(path):
-    with open(path, "r") as f:
-        for i in range(SKIP_LINES):
-            f.readline()  
-        return f.read()  
-
-# This is for getting new code after line X
-def text_tail_from_line(text):
-    return "".join(text.splitlines(True)[SKIP_LINES:])
-
 def remote_update():
     if not UPDATE_URL:
         print("No UPDATE_URL set; skipping OTA update.")
@@ -124,12 +98,6 @@ def remote_update():
 
     # Skip if identical
     try:
-        """
-        old_tail = file_tail_from_line("/code.py").rstrip()
-        new_tail = text_tail_from_line(new_code).rstrip()
-
-        if old_tail == new_tail:
-        """
         with open("/code.py", "r") as f:
                 old_code = f.read()
         if old_code == new_code:
