@@ -36,6 +36,7 @@ btn_down.pull = digitalio.Pull.UP  # enable internal pull-up
 # Initialize MatrixPortal
 matrixportal = MatrixPortal(status_neopixel=board.NEOPIXEL, debug=False)
 matrixportal.graphics.display.rotation = rotation
+
 # Matrix configuration
 MATRIX_WIDTH = matrixportal.graphics.display.width
 MATRIX_HEIGHT = 32
@@ -45,11 +46,20 @@ color_index = 0
 timer_end = None  # when the timer should end
 moving_message_update = True
 
+# Setting up socket 
+pool = socketpool.SocketPool(wifi.radio)
+server = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+server.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
+server.bind(("0.0.0.0", 1111))
+server.listen(1)
+server.settimeout(0.1)
+
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
-MESSAGES = ["Clock On"]
+MESSAGES = [wifi.radio.ipv4_address]
 daytype = 1
+
 
 def filesystem_writable():
     # Ensure CIRCUITPY filesystem is writable.
@@ -62,6 +72,7 @@ def filesystem_writable():
         print("Could not remount writable:", e)
         return False
 
+
 def safe_replace(src_path, dst_path):
     # Replace dst_path with src_path (best-effort on FAT).
     try:
@@ -70,9 +81,9 @@ def safe_replace(src_path, dst_path):
         pass
     os.rename(src_path, dst_path)
 
+
 def download_text():
     # Download text file over HTTPS.
-    pool = socketpool.SocketPool(wifi.radio)
     context = ssl.create_default_context()
     requests = adafruit_requests.Session(pool, context)
 
@@ -84,6 +95,7 @@ def download_text():
         return r.text
     finally:
         r.close()
+
 
 def remote_update():
     if not UPDATE_URL:
@@ -136,6 +148,15 @@ def remote_update():
             os.remove(tmp_path)
         except OSError:
             pass
+
+
+def listening_for_update_request():
+    try:
+        client, addr = server.accept()
+        remote_update()
+    except OSError:
+        pass
+        
 
 # This is for getting and changing the schedule
 def set_schedule():
@@ -261,7 +282,6 @@ def connect_wifi():
 def sync_ntp_time():
     # Sync time using NTP server directly
     try:
-        pool = socketpool.SocketPool(wifi.radio)
         ntp = adafruit_ntp.NTP(pool, tz_offset=get_timezone_offset())
 
         # Update board's RTC
@@ -403,8 +423,11 @@ def main():
     sync_ntp_time()
     setup_display()
 
+    print("Listening on: ", wifi.radio.ipv4_address, " port: ", 1111)
+
     # Main loop
     while True:
+        listening_for_update_request()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
