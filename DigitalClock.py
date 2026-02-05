@@ -15,11 +15,11 @@ import adafruit_requests # type: ignore
 from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
 # Gets the prefrences from the settings.toml / settings.env
-clock_format = os.getenv("clock_format")
+clock_format = int(os.getenv("clock_format"))
 FIRST_FIVE = bool(os.getenv("FIRST_FIVE"))
-rotation = os.getenv("rotation")
+rotation = int(os.getenv("rotation"))
 BTSN = bool(os.getenv("BTSN"))
-UPDATE_URL = os.getenv("UPDATE_URL")
+UPDATE_URL = int(os.getenv("UPDATE_URL"))
 AUTO_UPDATE = bool(os.getenv("AUTO_UPDATE"))
 
 print('testing')
@@ -45,19 +45,12 @@ message_index = 0
 color_index = 0
 timer_end = None  # when the timer should end
 moving_message_update = True
-
-# Setting up socket 
 pool = socketpool.SocketPool(wifi.radio)
-server = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-server.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
-server.bind(("0.0.0.0", 1111))
-server.listen(1)
-server.settimeout(0.1)
 
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
-MESSAGES = [wifi.radio.ipv4_address]
+MESSAGES = [str(wifi.radio.ipv4_address)]
 daytype = 1
 
 
@@ -151,8 +144,15 @@ def remote_update():
 
 
 def listening_for_update_request():
+    server = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    server.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
+    server.bind(("0.0.0.0", 1111))
+    server.listen(1)
+    server.settimeout(0.1)
+
     try:
         client, addr = server.accept()
+        client.close()
         remote_update()
     except OSError:
         pass
@@ -262,6 +262,8 @@ def is_first_5_mins():
 
 
 def connect_wifi():
+    global pool
+
     # Connect to WiFi using settings.toml credentials
     print("Connecting to WiFi...")
     isConnected = False
@@ -278,6 +280,7 @@ def connect_wifi():
             isConnected = True
     print("Connected to WiFi!")
     print("IP:", wifi.radio.ipv4_address)
+    pool = socketpool.SocketPool(wifi.radio)
 
 def sync_ntp_time():
     # Sync time using NTP server directly
@@ -411,19 +414,19 @@ def main():
     global message_index
     global timer_end
     global moving_message_update
-
-    #Time related variables
-    time_index = 0
-    last_timer_update = 0
-    last_date_update = 0
      
     # Initial setup
     connect_wifi()
     remote_update()
     sync_ntp_time()
-    setup_display()
+    setup_display()    
 
     print("Listening on: ", wifi.radio.ipv4_address, " port: ", 1111)
+
+    #Time related variables
+    time_index = 0
+    last_timer_update = 0
+    last_date_update = time.localtime().tm_mday
 
     # Main loop
     while True:
