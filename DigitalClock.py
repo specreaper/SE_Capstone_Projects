@@ -295,6 +295,8 @@ def restart_listening_socket():
     
 
 def poll_for_update_request():
+    global MESSAGES
+    global moving_message_update
     if server is None:
         return
 
@@ -304,6 +306,7 @@ def poll_for_update_request():
         return  # No pendNing connection
     try:
         client.recv(64) # Reads a bit
+        time.sleep(1)
     except Exception:
         pass
     finally:
@@ -312,7 +315,8 @@ def poll_for_update_request():
         except Exception:
             pass
     # If it made it this far it means server.accept() recieved a message
-    print("Update request from ", addr)
+    MESSAGES = ["Update request from ", addr]
+    moving_message_update = True
     remote_update()
     
 
