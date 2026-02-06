@@ -478,7 +478,6 @@ def main():
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
             print("Resynced")
-            continue
         
         # If there is time in the timer show it
         elif(timer_end is not None):
@@ -501,19 +500,17 @@ def main():
                     matrixportal.set_text("Time Left: ", 2)
                     matrixportal.set_text(f"{minutes:02d}:{seconds:02d}", 1)
             time.sleep(1)
+            continue
         
         # If FirstFive is on run it
         elif(FIRST_FIVE == True and first_5_mins != -1):
-                poll_for_update_request()
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
-            
-
+    
         # Checks for if a there is a scrolling message to show or not
         elif(moving_message_update == True):
-            poll_for_update_request()
             # Update scrolling message
             moving_message = MESSAGES[message_index]
             print(moving_message)
@@ -529,7 +526,6 @@ def main():
 
         # If 1 use Chris's prefered format
         elif(clock_format == 1):
-            poll_for_update_request()
             matrixportal.set_text("ict.gctaa", 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
@@ -544,10 +540,10 @@ def main():
         
         # If 2 use Jeff's prefered format
         elif(clock_format == 2):
-            poll_for_update_request()
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
+        poll_for_update_request()
 
     print("done")
 
