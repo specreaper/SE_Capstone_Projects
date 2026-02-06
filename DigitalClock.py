@@ -302,6 +302,14 @@ def poll_for_update_request():
         client, addr = server.accept()  # Returns immediately in non-blocking mode
     except OSError:
         return  # No pendNing connection
+    try:
+        client.recv(64) # Reads a bit
+    except Exception:
+        pass
+    try:
+        client.send(b"Prompt Recieved \n") # Sends a message back
+    except Exception:
+        pass
     finally:
         try:
             client.close()
