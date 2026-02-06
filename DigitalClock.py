@@ -462,7 +462,8 @@ def main():
     time_index = 0
     last_timer_update = 0
     last_date_update = time.localtime().tm_mday
-    MESSAGES = [str(wifi.radio.ipv4_address)]
+    #MESSAGES = [str(wifi.radio.ipv4_address)]
+    MESSAGES = ["hello"]
 
     # Main loop
     while True:
