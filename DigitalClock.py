@@ -91,10 +91,6 @@ def download_text():
 
 
 def remote_update():
-    if not UPDATE_URL:
-        print("No UPDATE_URL set; skipping OTA update.")
-        return
-
     if not filesystem_writable():
         print("Filesystem not writable; skipping OTA update.")
         return
