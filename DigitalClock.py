@@ -54,18 +54,6 @@ MESSAGES = []
 daytype = 1
 
 
-def filesystem_writable():
-    # Ensure CIRCUITPY filesystem is writable.
-    try:
-        # Checks if file is writable
-        storage.remount("/", readonly=False)
-        return True
-    # Checks if there is an error
-    except Exception as e:
-        print("Could not remount writable:", e)
-        return False
-
-
 def safe_replace(src_path, dst_path):
     # Replace dst_path with src_path (best-effort on FAT).
     try:
@@ -91,10 +79,6 @@ def download_text():
 
 
 def remote_update():
-    if not filesystem_writable():
-        print("Filesystem not writable; skipping OTA update.")
-        return
-
     try:
         new_code = download_text()
     # Checks for downloading error
@@ -306,7 +290,6 @@ def poll_for_update_request():
         return  # No pendNing connection
     try:
         client.recv(64) # Reads a bit
-        time.sleep(1)
     except Exception:
         pass
     finally:
@@ -315,7 +298,7 @@ def poll_for_update_request():
         except Exception:
             pass
     # If it made it this far it means server.accept() recieved a message
-    MESSAGES = ["Update request from ", addr]
+    MESSAGES = ["Message Recieved"]
     moving_message_update = True
     remote_update()
     
