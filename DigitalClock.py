@@ -306,10 +306,6 @@ def poll_for_update_request():
         client.recv(64) # Reads a bit
     except Exception:
         pass
-    try:
-        client.send(b"Prompt Recieved \n") # Sends a message back
-    except Exception:
-        pass
     finally:
         try:
             client.close()
