@@ -19,7 +19,7 @@ clock_format = int(os.getenv("clock_format"))
 FIRST_FIVE = bool(int(os.getenv("FIRST_FIVE")))
 rotation = int(os.getenv("rotation"))
 BTSN = bool(int(os.getenv("BTSN")))
-UPDATE_URL = str(os.getenv("UPDATE_URL"))
+UPDATE_URL = os.getenv("UPDATE_URL")
 
 print('testing')
 # Setup button input up
@@ -270,8 +270,6 @@ def connect_wifi():
 
 def setting_up_listening_socket():
     global server
-    if server is not None:
-        return
     
     s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
     s.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
@@ -288,6 +286,7 @@ def setting_up_listening_socket():
     print("Update server ready on port 1111")
 
 
+# Restarts the socket because if you reconnect to wifi it might mess with the socket if its not also reset with it
 def restart_listening_socket():
     global server
     if server is not None:
@@ -297,25 +296,23 @@ def restart_listening_socket():
             pass
         server = None
     setting_up_listening_socket()
-
     
+
 def poll_for_update_request():
     if server is None:
         return
 
     try:
-        client, addr = server.accept()  # returns immediately in non-blocking mode
+        client, addr = server.accept()  # Returns immediately in non-blocking mode
     except OSError:
-        return  # no pending connection
-    
-    try:
-        print("Update request from", addr)
+        return  # No pendNing connection
     finally:
         try:
             client.close()
         except Exception:
             pass
-    
+    # If it made it this far it means server.accept() recieved a message
+    print("Update request from ", addr)
     remote_update()
     
 
