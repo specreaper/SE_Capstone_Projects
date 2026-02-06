@@ -298,7 +298,7 @@ def poll_for_update_request():
         except Exception:
             pass
     # If it made it this far it means server.accept() recieved a message
-    MESSAGES = ["Message Recieved"]
+    MESSAGES = ["Fuck ChatGPT"]
     moving_message_update = True
     remote_update()
     
@@ -449,8 +449,7 @@ def main():
     time_index = 0
     last_timer_update = 0
     last_date_update = time.localtime().tm_mday
-    #MESSAGES = [str(wifi.radio.ipv4_address)]
-    MESSAGES = ["Fuck ChatGPT"]
+    MESSAGES = [str(wifi.radio.ipv4_address)]
 
     # Main loop
     while True:
