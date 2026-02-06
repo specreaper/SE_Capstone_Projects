@@ -291,8 +291,10 @@ def setting_up_listening_socket():
 def restart_listening_socket():
     global server
     if server is not None:
-        try: server.close()
-        except: pass
+        try: 
+            server.close()
+        except Exception: 
+            pass
         server = None
     setting_up_listening_socket()
 
