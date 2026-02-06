@@ -545,7 +545,6 @@ def main():
             time.sleep(1)
         poll_for_update_request()
 
-    print("done")
 
 if __name__ == "__main__":
     main()
