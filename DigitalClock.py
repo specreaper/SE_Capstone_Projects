@@ -16,11 +16,10 @@ from adafruit_matrixportal.matrixportal import MatrixPortal # type: ignore
 
 # Gets the prefrences from the settings.toml / settings.env
 clock_format = int(os.getenv("clock_format"))
-FIRST_FIVE = bool(os.getenv("FIRST_FIVE"))
+FIRST_FIVE = bool(int(os.getenv("FIRST_FIVE")))
 rotation = int(os.getenv("rotation"))
-BTSN = bool(os.getenv("BTSN"))
-UPDATE_URL = int(os.getenv("UPDATE_URL"))
-AUTO_UPDATE = bool(os.getenv("AUTO_UPDATE"))
+BTSN = bool(int(os.getenv("BTSN")))
+UPDATE_URL = str(os.getenv("UPDATE_URL"))
 
 print('testing')
 # Setup button input up
@@ -46,11 +45,12 @@ color_index = 0
 timer_end = None  # when the timer should end
 moving_message_update = True
 pool = socketpool.SocketPool(wifi.radio)
+server = None
 
 #Set up variables for the bell schedule
 bell_times = []
 class_start_times = []
-MESSAGES = [str(wifi.radio.ipv4_address)]
+MESSAGES = []
 daytype = 1
 
 
@@ -141,21 +141,6 @@ def remote_update():
             os.remove(tmp_path)
         except OSError:
             pass
-
-
-def listening_for_update_request():
-    server = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-    server.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
-    server.bind(("0.0.0.0", 1111))
-    server.listen(1)
-    server.settimeout(0.1)
-
-    try:
-        client, addr = server.accept()
-        client.close()
-        remote_update()
-    except OSError:
-        pass
         
 
 # This is for getting and changing the schedule
@@ -281,6 +266,56 @@ def connect_wifi():
     print("Connected to WiFi!")
     print("IP:", wifi.radio.ipv4_address)
     pool = socketpool.SocketPool(wifi.radio)
+
+
+def setting_up_listening_socket():
+    global server
+    if server is not None:
+        return
+    
+    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    s.setsockopt(pool.SOL_SOCKET, pool.SO_REUSEADDR, 1)
+    s.bind(("0.0.0.0", 1111))
+    s.listen(1)
+
+    try:
+        s.setblocking(False)
+    except AttributeError:
+        # Some builds don't expose setblocking; fallback to short timeout
+        s.settimeout(0.0)
+
+    server = s
+    print("Update server ready on port 1111")
+
+
+def restart_listening_socket():
+    global server
+    if server is not None:
+        try: server.close()
+        except: pass
+        server = None
+    setting_up_listening_socket()
+
+    
+def poll_for_update_request():
+    if server is None:
+        return
+
+    try:
+        client, addr = server.accept()  # returns immediately in non-blocking mode
+    except OSError:
+        return  # no pending connection
+    
+    try:
+        print("Update request from", addr)
+    finally:
+        try:
+            client.close()
+        except Exception:
+            pass
+    
+    remote_update()
+    
 
 def sync_ntp_time():
     # Sync time using NTP server directly
@@ -414,10 +449,11 @@ def main():
     global message_index
     global timer_end
     global moving_message_update
+    global MESSAGES
      
     # Initial setup
     connect_wifi()
-    remote_update()
+    setting_up_listening_socket()
     sync_ntp_time()
     setup_display()    
 
@@ -427,20 +463,18 @@ def main():
     time_index = 0
     last_timer_update = 0
     last_date_update = time.localtime().tm_mday
+    MESSAGES = [str(wifi.radio.ipv4_address)]
 
     # Main loop
     while True:
-        listening_for_update_request()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
 
-        #if(AUTO_UPDATE == True):
-        #    remote_update()
-
         # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
         if(time.localtime().tm_mday != last_date_update):
             connect_wifi()
+            restart_listening_socket()
             remote_update()
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
@@ -471,6 +505,7 @@ def main():
         
         # If FirstFive is on run it
         elif(FIRST_FIVE == True and first_5_mins != -1):
+                poll_for_update_request()
                 matrixportal.set_text("Reading Quiz In:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
@@ -479,6 +514,7 @@ def main():
 
         # Checks for if a there is a scrolling message to show or not
         elif(moving_message_update == True):
+            poll_for_update_request()
             # Update scrolling message
             moving_message = MESSAGES[message_index]
             print(moving_message)
@@ -494,6 +530,7 @@ def main():
 
         # If 1 use Chris's prefered format
         elif(clock_format == 1):
+            poll_for_update_request()
             matrixportal.set_text("ict.gctaa", 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
             if time_index == 0:
@@ -508,6 +545,7 @@ def main():
         
         # If 2 use Jeff's prefered format
         elif(clock_format == 2):
+            poll_for_update_request()
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
