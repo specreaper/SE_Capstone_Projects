@@ -99,15 +99,15 @@ def remote_update():
         pass
     
     # Replaces the old code with new code
-    tmp_path = "code.py.new"
+    tmp_path = "/code.py.new"
     try:
         print("Writing", tmp_path)
         with open(tmp_path, "w") as f:
             f.write(new_code)
             f.flush()
 
-        print("Replacing code.py")
-        safe_replace(tmp_path, "code.py")
+        print("Replacing /code.py")
+        safe_replace(tmp_path, "/code.py")
 
         print("OTA update complete reloading")
         time.sleep(0.5)
