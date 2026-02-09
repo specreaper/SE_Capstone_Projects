@@ -86,10 +86,6 @@ def remote_update():
         print("OTA fetch failed:", e)
         return
 
-    if "<html" in new_code.lower():
-        print("Downloaded HTML page; refusing update.")
-        return
-
     # Skip if identical
     try:
         with open("/code.py", "r") as f:
@@ -101,15 +97,15 @@ def remote_update():
         pass
     
     # Replaces the old code with new code
-    tmp_path = "/code.py.new"
+    tmp_path = "code.py.new"
     try:
         print("Writing", tmp_path)
         with open(tmp_path, "w") as f:
             f.write(new_code)
             f.flush()
 
-        print("Replacing /code.py")
-        safe_replace(tmp_path, "/code.py")
+        print("Replacing code.py")
+        safe_replace(tmp_path, "code.py")
 
         print("OTA update complete reloading")
         time.sleep(0.5)
@@ -298,7 +294,7 @@ def poll_for_update_request():
         except Exception:
             pass
     # If it made it this far it means server.accept() recieved a message
-    MESSAGES = ["Fuck ChatGPT"]
+    MESSAGES = ["Message Recieved"]
     moving_message_update = True
     remote_update()
     
