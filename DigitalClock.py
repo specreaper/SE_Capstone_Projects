@@ -79,6 +79,8 @@ def download_text():
 
 
 def remote_update():
+    global MESSAGES 
+    global moving_message_update
     try:
         new_code = download_text()
     # Checks for downloading error
@@ -112,6 +114,8 @@ def remote_update():
         supervisor.reload()
 
     except Exception as e:
+        MESSAGES = ["OTA write/replace failed:"]
+        moving_message_update = True
         print("OTA write/replace failed:", e)
         try:
             os.remove(tmp_path)
@@ -294,8 +298,7 @@ def poll_for_update_request():
         except Exception:
             pass
     # If it made it this far it means server.accept() recieved a message
-    MESSAGES = ["Message Recieved"]
-    moving_message_update = True
+    print("Message Recieved")
     remote_update()
     
 
