@@ -114,7 +114,7 @@ def remote_update():
         supervisor.reload()
 
     except Exception as e:
-        MESSAGES = ["OTA write/replace failed:"]
+        MESSAGES = ["OTA write/replace failed:", e]
         moving_message_update = True
         print("OTA write/replace failed:", e)
         try:
@@ -526,7 +526,6 @@ def main():
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
-        print("working")
         poll_for_update_request()
 
 
