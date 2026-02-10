@@ -299,6 +299,8 @@ def poll_for_update_request():
             pass
     # If it made it this far it means server.accept() recieved a message
     print("Message Recieved")
+    MESSAGES = ["Message Recieved"]
+    moving_message_update = True
     remote_update()
     
 
