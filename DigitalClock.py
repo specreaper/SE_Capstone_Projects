@@ -114,7 +114,7 @@ def remote_update():
         supervisor.reload()
 
     except Exception as e:
-        MESSAGES = ["OTA write/replace failed:", e]
+        MESSAGES = [str(e)]
         moving_message_update = True
         print("OTA write/replace failed:", e)
         try:
