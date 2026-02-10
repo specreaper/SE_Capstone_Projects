@@ -458,7 +458,6 @@ def main():
         if(time.localtime().tm_mday != last_date_update):
             connect_wifi()
             restart_listening_socket()
-            remote_update()
             sync_ntp_time()
             last_date_update = time.localtime().tm_mday
             print("Resynced")
