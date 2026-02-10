@@ -526,6 +526,7 @@ def main():
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
+        print("working")
         poll_for_update_request()
 
 
