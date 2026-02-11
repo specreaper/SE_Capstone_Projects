@@ -21,6 +21,8 @@ rotation = int(os.getenv("rotation"))
 BTSN = bool(int(os.getenv("BTSN")))
 UPDATE_URL = os.getenv("UPDATE_URL")
 
+reloading = False
+
 print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
@@ -90,6 +92,13 @@ def download_text():
 def remote_update():
     global MESSAGES 
     global moving_message_update
+    global reloading
+    try:
+        # Checks if file is writable
+        storage.remount("/", readonly=False)
+    # Checks if there is an error
+    except Exception as e:
+        print("Could not remount writable:", e)
 
     try:
         new_code = download_text()
@@ -123,7 +132,8 @@ def remote_update():
         MESSAGES = ["Success"]
         moving_message_update = True
         time.sleep(0.5)
-        supervisor.reload()
+        reloading = True
+        #supervisor.reload()
 
     except Exception as e:
         MESSAGES = [str(e)]
@@ -524,12 +534,6 @@ def main():
         # If 1 use Chris's prefered format
         elif(clock_format == 1): 
             #matrixportal.set_text("ict.gctaa", 0)
-            try:
-                # Checks if file is writable
-                storage.remount("/", readonly=False)
-            # Checks if there is an error
-            except Exception as e:
-                print("Could not remount writable:", e)
             
             matrixportal.set_text(str(is_filesystem_writable()), 0)
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
@@ -549,6 +553,8 @@ def main():
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)
         poll_for_update_request()
+        if reloading == True:
+            supervisor.reload()
 
 
 if __name__ == "__main__":
