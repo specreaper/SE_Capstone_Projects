@@ -21,8 +21,6 @@ rotation = int(os.getenv("rotation"))
 BTSN = bool(int(os.getenv("BTSN")))
 UPDATE_URL = os.getenv("UPDATE_URL")
 
-reloading = False
-
 print('testing')
 # Setup button input up
 btn_up = digitalio.DigitalInOut(board.BUTTON_UP)
@@ -92,7 +90,6 @@ def download_text():
 def remote_update():
     global MESSAGES 
     global moving_message_update
-    global reloading
     try:
         # Checks if file is writable
         storage.remount("/", readonly=False)
@@ -132,7 +129,6 @@ def remote_update():
         MESSAGES = ["Success"]
         moving_message_update = True
         time.sleep(0.5)
-        reloading = True
         #supervisor.reload()
 
     except Exception as e:
@@ -455,7 +451,6 @@ def main():
     global timer_end
     global moving_message_update
     global MESSAGES
-    global reloading
 
     # Initial setup
     connect_wifi()
@@ -469,7 +464,6 @@ def main():
     time_index = 0
     last_timer_update = 0
     last_date_update = time.localtime().tm_mday
-    reloading = False
     #MESSAGES = [str(wifi.radio.ipv4_address)]
     MESSAGES = [str(is_filesystem_writable())]
     
@@ -548,8 +542,6 @@ def main():
             # Scroll delay
             scroll_speed_update()
             matrixportal.scroll_text(SCROLL_DELAY)
-            if reloading == True:
-                supervisor.reload()
         
         # If 2 use Jeff's prefered format
         elif(clock_format == 2):
