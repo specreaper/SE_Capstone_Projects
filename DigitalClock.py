@@ -546,15 +546,14 @@ def main():
             # Scroll delay
             scroll_speed_update()
             matrixportal.scroll_text(SCROLL_DELAY)
+            if reloading == True:
+                supervisor.reload()
         
         # If 2 use Jeff's prefered format
         elif(clock_format == 2):
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
-            time.sleep(1)
-        poll_for_update_request()
-        if reloading == True:
-            supervisor.reload()
+            time.sleep(1)        
 
 
 if __name__ == "__main__":
