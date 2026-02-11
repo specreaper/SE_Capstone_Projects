@@ -6,7 +6,7 @@ import socketpool # type: ignore
 import adafruit_ntp # type: ignore
 import terminalio# type: ignore
 import rtc # type: ignore
-import random # type: ignore
+import random 
 import digitalio # type: ignore
 import ssl 
 import storage # type: ignore
