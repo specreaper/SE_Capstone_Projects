@@ -124,12 +124,9 @@ def remote_update():
 
         print("Replacing /code.py")
         safe_replace(tmp_path, "/code.py")
-
         print("OTA update complete reloading")
-        MESSAGES = ["Success"]
-        moving_message_update = True
         time.sleep(0.5)
-        #supervisor.reload()
+        supervisor.reload()
 
     except Exception as e:
         MESSAGES = [str(e)]
