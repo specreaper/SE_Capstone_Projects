@@ -6,7 +6,7 @@ import socketpool # type: ignore
 import adafruit_ntp # type: ignore
 import terminalio# type: ignore
 import rtc # type: ignore
-import random # type: ignore
+import random
 import digitalio # type: ignore
 import ssl 
 import storage # type: ignore
@@ -81,6 +81,7 @@ def download_text():
 def remote_update():
     global MESSAGES 
     global moving_message_update
+    
     try:
         new_code = download_text()
     # Checks for downloading error
