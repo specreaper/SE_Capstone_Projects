@@ -455,6 +455,7 @@ def main():
     global timer_end
     global moving_message_update
     global MESSAGES
+    global reloading
 
     # Initial setup
     connect_wifi()
@@ -468,6 +469,7 @@ def main():
     time_index = 0
     last_timer_update = 0
     last_date_update = time.localtime().tm_mday
+    reloading = False
     #MESSAGES = [str(wifi.radio.ipv4_address)]
     MESSAGES = [str(is_filesystem_writable())]
     
