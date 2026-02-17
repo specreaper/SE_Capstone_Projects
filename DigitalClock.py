@@ -132,7 +132,7 @@ def remote_update():
         print("Replacing /code.py")
         safe_replace(tmp_path, "/code.py")
         print("OTA update complete reloading")
-        time.sleep(1)
+        time.sleep(0.5)
         supervisor.reload()
 
     except Exception as e:
@@ -461,6 +461,7 @@ def main():
     setting_up_listening_socket()
     sync_ntp_time()
     setup_display()    
+    writeable_reset()
 
     print("Listening on: ", wifi.radio.ipv4_address, " port: ", 1111)
 
@@ -473,7 +474,6 @@ def main():
 
     # Main loop
     while True:
-        writeable_reset()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
@@ -552,6 +552,7 @@ def main():
             matrixportal.set_text(get_current_datetime()[1], 2)
             matrixportal.set_text(time_remaining(), 1)
             time.sleep(1)        
+        poll_for_update_request()
 
 
 if __name__ == "__main__":
