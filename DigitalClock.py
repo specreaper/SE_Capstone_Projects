@@ -132,7 +132,7 @@ def remote_update():
         print("Replacing /code.py")
         safe_replace(tmp_path, "/code.py")
         print("OTA update complete reloading")
-        time.sleep(0.5)
+        time.sleep(1)
         supervisor.reload()
 
     except Exception as e:
