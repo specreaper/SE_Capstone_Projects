@@ -86,6 +86,13 @@ def download_text():
     finally:
         r.close()
 
+def writeable_reset():
+    try:
+        # Checks if file is writable
+        storage.remount("/", readonly=True)
+    # Checks if there is an error
+    except Exception as e:
+        print("Could not remount writable:", e)
 
 def remote_update():
     global MESSAGES 
@@ -466,6 +473,7 @@ def main():
 
     # Main loop
     while True:
+        writeable_reset()
         set_schedule()
         manage_timer_time()
         first_5_mins = is_first_5_mins()
