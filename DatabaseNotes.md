@@ -45,5 +45,30 @@
 * Transitively Dependent = a key that indirectly determines the values of other columns.
 
 # SQL
+**SQL** = a language used to operate a relational database, which also stands for Structured Query Language.   
+
+There are three distinct types of SQL commands.   
+| SQL Command Type | Discription |
+|------------------|-------------|
+| **Data Definition Language (DDL)** | Creates a table |
+| **Data Manipulation Language (DML)** | Inputs and retrieves data |
+| **Data Control Language (DCL)** | Manages user access | 
+
+## Data Manipulation Language (DML)
+* SELECT ___ = specifies which column in a table you want to retrieve data from, you can use * for all coumn.   
+* FROM ___ = specifies which table you want to retrieve data from.   
+* WHERE ___ = conditions that the data you want to find has.   
+
+| SELECT Operation | Discription |
+| | |
+
+| WHERE Condition | Discription |
+|-----------------|-------------|
+| Comparison Operators | =, >, >=, <, <=, and <>. |
+| Logic Operators | AND, OR, and NOT. |
+| LIKE %n | finds any strings that end with n |
+| LIKE n% | finds any strings that start with n |
+| BETWEEN x AND y | finds any values between x and y also put below the WHERE |
+| is NULL | finds any values that are NULL |
 
 # Operating A Database
