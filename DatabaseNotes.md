@@ -60,14 +60,15 @@ There are three distinct types of SQL commands.
 * WHERE ___ = conditions that the data you want to find has.   
 
 | SELECT Operation | Discription |
-| | |
+| Count() | instead of returning the records in columns that meet the conditions, only return the number of records that meet the conditions. |
+| GROUP by ___ | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |
 
 | WHERE Condition | Discription |
 |-----------------|-------------|
 | Comparison Operators | =, >, >=, <, <=, and <>. |
 | Logic Operators | AND, OR, and NOT. |
-| LIKE %n | finds any strings that end with n |
-| LIKE n% | finds any strings that start with n |
+| LIKE % | finds any string of any length, the % can be paired with other letters to find words contain something specific. |
+| LIKE _ | finds any strings thats only the length of how many _ are provided, the _ can be paired with other letters to find words contain something specific. |
 | BETWEEN x AND y | finds any values between x and y also put below the WHERE |
 | is NULL | finds any values that are NULL |
 
