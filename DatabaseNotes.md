@@ -9,7 +9,7 @@ Some problems with databases is they need to be carefully managed, so you don't 
 * **Relational Data Model** = a data model that processes data using tables.   
    
 # Relational Database 
-Relational databases = a collection of data tables and the relationship between those tables.   
+**Relational databases** = a collection of data tables and the relationship between those tables.   
    
 In a relational database there are few terms that will be explained in the following table:   
 |  Term Name  | Meaning |
