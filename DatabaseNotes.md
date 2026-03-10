@@ -45,7 +45,7 @@
 * Transitively Dependent = a key that indirectly determines the values of other columns.
 
 # SQL
-**SQL** = a language used to operate a relational database, which also stands for Structured Query Language.   
+* **SQL** = a language used to operate a relational database, which also stands for Structured Query Language.   
 
 There are three distinct types of SQL commands.   
 | SQL Command Type | Discription |
@@ -55,21 +55,45 @@ There are three distinct types of SQL commands.
 | **Data Control Language (DCL)** | Manages user access | 
 
 ## Data Manipulation Language (DML)
-* SELECT ___ = specifies which column in a table you want to retrieve data from, you can use * for all coumn.   
-* FROM ___ = specifies which table you want to retrieve data from.   
-* WHERE ___ = conditions that the data you want to find has.   
-
-| SELECT Operation | Discription |
-| Count() | instead of returning the records in columns that meet the conditions, only return the number of records that meet the conditions. |
-| GROUP by ___ | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |
+* **SELECT ___** = specifies which column in a table you want to retrieve data from, you can use * for all coumn.   
+* **FROM ___** = specifies which table you want to retrieve data from.   
+* **WHERE ___** = is a filter that uses conditions to find the data you want.   
 
 | WHERE Condition | Discription |
 |-----------------|-------------|
-| Comparison Operators | =, >, >=, <, <=, and <>. |
-| Logic Operators | AND, OR, and NOT. |
-| LIKE % | finds any string of any length, the % can be paired with other letters to find words contain something specific. |
-| LIKE _ | finds any strings thats only the length of how many _ are provided, the _ can be paired with other letters to find words contain something specific. |
-| BETWEEN x AND y | finds any values between x and y also put below the WHERE |
-| is NULL | finds any values that are NULL |
+| **Comparison Operators** | =, >, >=, <, <=, and <>. |
+| **Logic Operators** | AND, OR, and NOT. |
+| **LIKE %** | finds any string of any length, the % can be paired with other letters to find words contain something specific. |
+| **LIKE _** | finds any strings thats only the length of how many _ are provided, the _ can be paired with other letters to find words contain something specific. |
+| **BETWEEN x AND y** | finds any values between x and y also put below the WHERE |
+| **is NULL** | finds any values that are NULL |
+
+| Aggregate Functions | Discription |
+|---------------------|-------------|
+| **Count()** | instead of returning the records in columns that meet the conditions, only return the number of records that meet the conditions. |
+| **AVG()** | returns the averages of a set of numeric values in a column. | 
+| **GROUP by ___** | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |
+
+* **HAVING ___** = is a filter that uses conditions and aggregate functions to find the data you want.   
+* Subquery = queries embeded in another query.   
+
+## Data Definition Language (DDL) 
+* **CREATE TABLE __ ()** = creates a table and names it what you put in the blank and creates columns based off what you put in between the ().   
+* When you create a table you want to put constraints on it, to help you manage the database and prevent data conflicts later on.   
+
+| Constraint | Description | Constraint | Description |
+|------------|-------------|------------|-------------|
+| **PRIMARY KEY** | sets a primary key and is basiclly a combination of UNIQUE and NOT NULL. | **UNIQUE** | ensures that all values in a column are unique. |
+| **NOT NULL** | ensures that a column cannot have a NULL value | **CHECK** | ensures that the values in a column satisfies a specific condition. |
+| **DEFAULT** | sets a default value for a column if no value is specified. | **FOREIGN KEY () REFERENCES ()** | sets a foreign key establishing a link between data in two tables and prevents actions that will destroy the link between them. |
+
+* **INSERT INTO ___** = lets you insert values into the table you put in the blank.   
+* **UPDATE ___** = lets you update values in the table you put in the blank.   
+* **DELETE FROM ___** = lets you delete values in the table you put in the blank.   
+
+* **CREATE VIEW ___ ()** = creates a virtalual table that only stores a query's structure thats derived from other tables and can only be manipulated as a whole.   
+
+* **DROP VIEW ___** = deletes a view you put in the blank.   
+* **DROP TABLE ___** = delates a table you put in the blank.   
 
 # Operating A Database
