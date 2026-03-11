@@ -98,5 +98,5 @@ When you create a table you want to put constraints on it, to help you manage th
 There are four properties required for transactions in a database for it to work properly:   
 | Property | Description | Property | Description |
 |----------|-------------|----------|-------------|
-| Atomicity | transactions must end with either a commit or rollback operation. | Consistency | when processing a transaction it never results in, a loss of consistency in the database. |
-| Isolation | Even when transactions are processed concurrently, the results must be the same for sequential processing. | Durability | the contents of a completed transaction should not be affected by failure. |
+| **Atomicity** | transactions must end with either a commit or rollback operation. | **Consistency** | when processing a transaction it never results in, a loss of consistency in the database. |
+| **Isolation** | Even when transactions are processed concurrently, the results must be the same for sequential processing. | **Durability** | the contents of a completed transaction should not be affected by failure. |
