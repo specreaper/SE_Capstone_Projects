@@ -48,24 +48,44 @@ There are three kinds of relationships in the E-R Model One-To-One, One-To-Many,
 # SQL
 **SQL** = a language used to operate a relational database, which also stands for Structured Query Language.   
    
-There are three distinct types of SQL commands.   
+There are five distinct types of SQL commands.   
 | SQL Command Type | Discription |
 |------------------|-------------|
-| **Data Definition Language (DDL)** | Creates a table |
-| **Data Manipulation Language (DML)** | Inputs and retrieves data |
-| **Data Control Language (DCL)** | Manages user access |   
+| **Data Definition Language (DDL)** | Creates the table |
+| **Data Manipulation Language (DML)** | Inputs and modifies data |
+| **Data Query Language (DQL)** | Retrieves data |
+| **Data Control Language (DCL)** | Manages user access |
+| **Transaction Control Language (TCL)** | Manages transactions |   
+   
+## Data Definition Language (DDL) 
+**CREATE TABLE __ ()** = creates a table and names it what you put in the blank and creates columns based off what you put in between the ().   
+**CREATE VIEW ___ ()** = creates a virtalual table that only stores a query's structure thats derived from other tables and can only be manipulated as a whole.   
+**DROP VIEW ___** = deletes a view you put in the blank.   
+**DROP TABLE ___** = delates a table you put in the blank.   
+**TURNCATE TABLE ___** = removes all records from a table.   
+**ALTER ___** = changes the structure of a database.   
+**RENAME ___ TO ___** = renames an object existing in a database.   
+   
+When you create a table you want to put constraints on it, to help you manage the database and prevent data conflicts later on.   
+| Constraint | Description | Constraint | Description |
+|------------|-------------|------------|-------------|
+| **PRIMARY KEY** | sets a primary key and is basiclly a combination of UNIQUE and NOT NULL. | **UNIQUE** | ensures that all values in a column are unique. |
+| **NOT NULL** | ensures that a column cannot have a NULL value | **CHECK** | ensures that the values in a column satisfies a specific condition. |
+| **DEFAULT** | sets a default value for a column if no value is specified. | **FOREIGN KEY () REFERENCES ()** | sets a foreign key establishing a link between data in two tables and prevents actions that will destroy the link between them. |   
    
 ## Data Manipulation Language (DML)
+**INSERT INTO ___** = lets you insert values into the table you put in the blank.   
+**UPDATE ___** = lets you update values in the table you put in the blank.   
+**DELETE FROM ___** = lets you delete values in the table you put in the blank.   
+   
+## Data Query Language (DQL) 
 **Subquery** = queries embeded in another query.   
    
 **SELECT ___** = specifies which column in a table you want to retrieve data from, you can use * for all coumn.   
 **FROM ___** = specifies which table you want to retrieve data from.   
 **WHERE ___** = is a filter that uses conditions to find the data you want.   
 **HAVING ___** = is a filter that uses conditions and aggregate functions to find the data you want.   
-**INSERT INTO ___** = lets you insert values into the table you put in the blank.   
-**UPDATE ___** = lets you update values in the table you put in the blank.   
-**DELETE FROM ___** = lets you delete values in the table you put in the blank.   
-   
+
 | WHERE Condition | Discription |
 |-----------------|-------------|
 | **Comparison Operators** | =, >, >=, <, <=, and <>. |
@@ -81,20 +101,20 @@ There are three distinct types of SQL commands.
 | **AVG()** | returns the averages of a set of numeric values in a column. | 
 | **GROUP by ___** | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |   
    
-## Data Definition Language (DDL) 
-**CREATE TABLE __ ()** = creates a table and names it what you put in the blank and creates columns based off what you put in between the ().   
-**CREATE VIEW ___ ()** = creates a virtalual table that only stores a query's structure thats derived from other tables and can only be manipulated as a whole.   
-**DROP VIEW ___** = deletes a view you put in the blank.   
-**DROP TABLE ___** = delates a table you put in the blank.   
+## Data Control Language (DCL) 
+**GRANT ___ TO ___** = grants permissions to someone.   
+**REVOKE ___ TO ___** = revokes the permissions of someone.   
+In the grant and revoke commands you put staments which are what you are allowing people to do, additionally apart from WITH GRANT OPTION all the statements are put in the first blank.   
+| Statements | Results | Statements | Results |
+|------------|---------|------------|---------|
+| **SELECT** | allows user to search for rows in a table. | **INSERT** | allows user to insert rows in a table. |
+| **UPDATE** | allows user to update rows in a table. | **DELETE** | allows user to delete rows in a table. |
+| **ALL** | gives user all permissions. | **WITH GRANT OPTION** | allows user to give others permissions, and this statement is put after the second blank. |   
    
-When you create a table you want to put constraints on it, to help you manage the database and prevent data conflicts later on.   
-| Constraint | Description | Constraint | Description |
-|------------|-------------|------------|-------------|
-| **PRIMARY KEY** | sets a primary key and is basiclly a combination of UNIQUE and NOT NULL. | **UNIQUE** | ensures that all values in a column are unique. |
-| **NOT NULL** | ensures that a column cannot have a NULL value | **CHECK** | ensures that the values in a column satisfies a specific condition. |
-| **DEFAULT** | sets a default value for a column if no value is specified. | **FOREIGN KEY () REFERENCES ()** | sets a foreign key establishing a link between data in two tables and prevents actions that will destroy the link between them. |   
+## Transaction Control Language (TCL) 
+**COMMIT;** = confirms changes made in a transaction into a database.   
+**ROLLBACK;** = undoes changes made in a transaction in a database.   
    
-# Operating A Database
 There are four properties required for transactions in a database for it to work properly:   
 | Property | Description | Property | Description |
 |----------|-------------|----------|-------------|
