@@ -215,8 +215,6 @@ def manage_timer_time():
 # This is for the first five minutes
 def is_first_5_mins():
     now = time.localtime()
-    if now.tm_hour == 0:
-        sync_ntp_time()
 
     # Get current time in minutes since midnight
     current_minutes = now.tm_hour * 60 + now.tm_min
@@ -236,9 +234,9 @@ def is_first_5_mins():
         else:
             break
 
-    # 5 mins, minus the amount of time we've been in class
+    # the amount of time we've been in class
     try:
-        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
+        time_diff_seconds = (current_seconds - (last_bell_min * 60))
     except:
         time_diff_seconds = 0
 
@@ -511,8 +509,8 @@ def main():
             continue
         
         # If FirstFive is on run it
-        elif(FIRST_FIVE == True and first_5_mins != -1):
-                matrixportal.set_text("Reading Quiz In:", 0)
+        elif(FIRST_FIVE == True and first_5_mins <= (5*60)):
+                matrixportal.set_text("First 5:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
