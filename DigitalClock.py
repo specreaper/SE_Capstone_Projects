@@ -244,8 +244,9 @@ def is_first_5_mins():
     except:
         time_diff_seconds = 0
 
+    first_five_time = f"{time_diff_minutes}:{time_diff_seconds}"
     if time_diff_seconds > 0:
-        return f"{time_diff_minutes}:{time_diff_seconds}"
+        return first_five_time
     else:
         return -1
 
@@ -515,7 +516,7 @@ def main():
         # If FirstFive is on run it
         elif(FIRST_FIVE == True and first_5_mins <= (5*60)):
                 matrixportal.set_text("First 5:", 0)
-                matrixportal.set_text(first_5_mins, 1)
+                matrixportal.set_text(str(first_5_mins), 1)
                 scroll_speed_update()
                 matrixportal.scroll_text(SCROLL_DELAY)
     
