@@ -99,6 +99,8 @@ When you create a table you want to put constraints on it, to help you manage th
 |---------------------|-------------|
 | **Count()** | instead of returning the records in columns that meet the conditions, only return the number of records that meet the conditions. |
 | **AVG()** | returns the averages of a set of numeric values in a column. | 
+| **MIN()** | returns the minimum of a set of numeric values in a column. |
+| **MAX()** | returns the maximum of a set of numeric values in a column. |
 | **GROUP by ___** | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |   
    
 ## Data Control Language (DCL) 
