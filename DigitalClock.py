@@ -235,8 +235,12 @@ def is_first_5_mins():
             break
     
     # the amount of time we've been in class
-    if (time_diff_seconds <= (5*60)):
-        time_diff_seconds = (current_seconds - (last_bell_min * 60))
+    # any operations with None throws an error and last_bell_min is None before school starts
+    # so before school starts this function returns a -1
+    try:
+        time_diff_seconds = (5 * 60) - (current_seconds - (last_bell_min * 60))
+    except:
+        return -1
 
     if time_diff_seconds > 0:
         return time_diff_seconds
@@ -507,7 +511,7 @@ def main():
             continue
         
         # If FirstFive is on run it
-        elif(FIRST_FIVE == True and first_5_mins != -1):
+        elif(FIRST_FIVE == True and int(first_5_mins) != -1):
                 matrixportal.set_text("First 5:", 0)
                 matrixportal.set_text(str(first_5_mins) + " secs", 1)
                 scroll_speed_update()
