@@ -80,14 +80,21 @@ When you create a table you want to put constraints on it, to help you manage th
    
 ## Data Query Language (DQL) 
 **Subquery** = queries embeded in another query.   
+**Clauses** = core modifiers for how data is retrived, filtered, grouped, and organized.   
+**Aggregate Functions** = funtions that performs a calculation on a set of values, and returns a single value.   
    
-**SELECT ___** = specifies which column in a table you want to retrieve data from, you can use * for all coumn.   
-**FROM ___** = specifies which table you want to retrieve data from.   
-**WHERE ___** = is a filter that uses conditions to find the data you want.   
-**HAVING ___** = is a filter that uses conditions and aggregate functions to find the data you want.   
+| Clauses | Discription |
+|---------|-------------|
+| **SELECT ___** | specifies which column in a table you want to retrieve data from, you can use * for all columns. |
+| **FROM ___** | specifies which table you want to retrieve data from. |
+| **WHERE ___** | is a filter that uses conditions and aggregate functions to find the data you want. |
+| **HAVING ___** | is a filter that is only used with GROUP by that uses conditions and aggregate functions to find the data you want. |
+| **CASE WHEN ___** | is a filter that is used in SELECT or aggregate functions. |
+| **DISTINCT ___** | returns only unqiue values in a column. |
+| **GROUP by ___** | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |   
 
-| WHERE Condition | Discription |
-|-----------------|-------------|
+| WHERE/CASE WHEN Conditions | Discription |
+|----------------------------|-------------|
 | **Comparison Operators** | =, >, >=, <, <=, and <>. |
 | **Logic Operators** | AND, OR, and NOT. |
 | **LIKE %** | finds any string of any length, the % can be paired with other letters to find words contain something specific. |
@@ -100,8 +107,7 @@ When you create a table you want to put constraints on it, to help you manage th
 | **Count()** | instead of returning the records in columns that meet the conditions, only return the number of records that meet the conditions. |
 | **AVG()** | returns the averages of a set of numeric values in a column. | 
 | **MIN()** | returns the minimum of a set of numeric values in a column. |
-| **MAX()** | returns the maximum of a set of numeric values in a column. |
-| **GROUP by ___** | enables grouping allowing you to put multiple column options into SELECT and have them show up together. |   
+| **MAX()** | returns the maximum of a set of numeric values in a column. |   
    
 ## Data Control Language (DCL) 
 **GRANT ___ TO ___** = grants permissions to someone.   
