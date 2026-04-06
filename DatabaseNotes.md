@@ -81,7 +81,7 @@ When you create a table you want to put constraints on it, to help you manage th
 ## Data Query Language (DQL) 
 **Subquery** = queries embedded in another query.   
 **Clauses** = core modifiers for how data is retrieved, filtered, grouped, and organized.   
-**Aggregate Functions** = functions that perform a calculation on a set of values and returns a single value.   
+**Aggregate Functions** = functions that perform a calculation on a set of values and returns a single numeric value.   
    
 | Clauses | Description |
 |---------|-------------|
@@ -104,7 +104,7 @@ When you create a table you want to put constraints on it, to help you manage th
    
 | Aggregate Functions | Description |
 |---------------------|-------------|
-| **Count()** | instead of returning the record entries in fields that meet the conditions, only return the number of records that meet the conditions. |
+| **Count()** | instead of returning the record entries in fields that meet the conditions, only return the number of record entries that meet the conditions. |
 | **AVG()** | returns the averages of a set of numeric values in a field. | 
 | **MIN()** | returns the minimum of a set of numeric values in a field. |
 | **MAX()** | returns the maximum of a set of numeric values in a field. |   
