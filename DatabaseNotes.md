@@ -93,14 +93,14 @@ When you create a table you want to put constraints on it, to help you manage th
 | **DISTINCT ___** | returns only unique values in a field. |
 | **GROUP BY ___** | returns records with similar values in the fields given in the underscore together and is usually used with aggregate functions. |   
 
-| WHERE/CASE WHEN Conditions | Description |
-|----------------------------|-------------|
+| Filter Conditions | Description |
+|-------------------|-------------|
 | **Comparison Operators** | =, >, >=, <, <=, and <>. |
 | **Logic Operators** | AND, OR, and NOT. |
 | **LIKE %** | finds any string of any length, the % can be paired with other letters to find records containing something specific. |
 | **LIKE _** | finds any strings whose length matches the number of underscores provided, the underscores can be paired with other letters to find record values containing something specific. |
 | **BETWEEN x AND y** | finds any values between x and y |
-| **IS NULL** | finds any values that are NULL |   
+| **IS** | a comparison operator that also works with NULL. |   
    
 | Aggregate Functions | Description |
 |---------------------|-------------|
