@@ -62,7 +62,7 @@ There are five distinct types of SQL commands.
 **CREATE VIEW ___ ()** = creates a virtual table that only stores a query's structure that's derived from other tables and can only be manipulated as a whole.   
 **DROP VIEW ___** = deletes a view you put in the blank.   
 **DROP TABLE ___** = deletes a table you put in the blank.   
-**TRUNCATE TABLE ___** = removes all record entries from a table.   
+**TRUNCATE TABLE ___** = removes all record values from a table.   
 **ALTER ___** = changes the structure of a database.   
 **RENAME ___ TO ___** = renames an object existing in a database.   
    
@@ -91,20 +91,20 @@ When you create a table you want to put constraints on it, to help you manage th
 | **HAVING ___** | is a filter that is only used with GROUP BY that uses conditions and aggregate functions to find the data you want. |
 | **CASE WHEN ___** | is a filter that is used in SELECT or aggregate functions. |
 | **DISTINCT ___** | returns only unique values in a field. |
-| **GROUP BY ___** | enables grouping allowing you to put multiple field options into SELECT and have them show up together. |   
+| **GROUP BY ___** | returns records with similar values in the fields given in the underscore together and is usually used with aggregate functions. |   
 
 | WHERE/CASE WHEN Conditions | Description |
 |----------------------------|-------------|
 | **Comparison Operators** | =, >, >=, <, <=, and <>. |
 | **Logic Operators** | AND, OR, and NOT. |
 | **LIKE %** | finds any string of any length, the % can be paired with other letters to find records containing something specific. |
-| **LIKE _** | finds any strings whose length matches the number of underscores provided, the underscores can be paired with other letters to find record entries containing something specific. |
+| **LIKE _** | finds any strings whose length matches the number of underscores provided, the underscores can be paired with other letters to find record values containing something specific. |
 | **BETWEEN x AND y** | finds any values between x and y |
 | **IS NULL** | finds any values that are NULL |   
    
 | Aggregate Functions | Description |
 |---------------------|-------------|
-| **Count()** | instead of returning the record entries in fields that meet the conditions, only return the number of record entries that meet the conditions. |
+| **Count()** | instead of returning the record values in fields that meet the conditions, only return the number of record values that meet the conditions. |
 | **AVG()** | returns the averages of a set of numeric values in a field. | 
 | **MIN()** | returns the minimum of a set of numeric values in a field. |
 | **MAX()** | returns the maximum of a set of numeric values in a field. |   
