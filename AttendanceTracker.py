@@ -1,8 +1,9 @@
 import os
 import time
 import sqlite3
-from sqlalchemy import ( #type: ignore
+from sqlalchemy import (
     create_engine,
+    text,
     Column,
     Integer,
     String,
@@ -10,7 +11,8 @@ from sqlalchemy import ( #type: ignore
     DateTime,
     ForeignKey,
 )
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship #type: ignore
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship 
+from datetime import datetime
 
 # Set up the database using SQLAlchemy
 databaseURL = 'sqlite:///studentsData.db'
@@ -30,6 +32,9 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+session.execute(text("TRUNCATE TABLE Students"))
+session.commit()
+
 users = Students(StudentID = 123, Period = "3A", Name = "Bob") #type: ignore
 session.add(users)
 users = Students(StudentID = 456, Period = "3A", Name = "Dob") #type: ignore
@@ -38,7 +43,7 @@ users = Students(StudentID = 789, Period = "3A", Name = "Pob") #type: ignore
 session.add(users)
 session.commit()
 
-user = str(input("what Student ID"))
+user = str(input("what Student ID: "))
 if(user == session.query(Students).filter_by(studentID = user)):
     print("working")
     #Log student
