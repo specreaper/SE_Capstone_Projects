@@ -17,8 +17,8 @@ databaseURL = 'sqlite:///studentsData.db'
 Base = declarative_base()
 engine = create_engine(databaseURL)
 
-class Student(Base):
-    __tablename__ = "students"
+class Students(Base):
+    __tablename__ = "Students"
     StudentID = Column(Integer, primary_key=True)
     # Date = Column(DateTime, primary_key=True)
     Period = Column(String, primary_key=True)
@@ -30,16 +30,16 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-users = Student(StudentID: 123, Period: "3A", Name: "Bob") #type: ignore
+users = Students(StudentID = 123, Period = "3A", Name = "Bob") #type: ignore
 session.add(users)
-users = Student(StudentID: 456, Period: "3A", Name: "Dob") #type: ignore
+users = Students(StudentID = 456, Period = "3A", Name = "Dob") #type: ignore
 session.add(users)
-users = Student(StudentID: 789, Period: "3A", Name: "Pob") #type: ignore
+users = Students(StudentID = 789, Period = "3A", Name = "Pob") #type: ignore
 session.add(users)
 session.commit()
 
 user = str(input("what Student ID"))
-if(user == session.query(Student).filter_by(studentID = user)):
+if(user == session.query(Students).filter_by(studentID = user)):
     print("working")
     #Log student
 
