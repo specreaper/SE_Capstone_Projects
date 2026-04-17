@@ -3,7 +3,6 @@ import time
 import sqlite3
 from sqlalchemy import (
     create_engine,
-    text,
     Column,
     Integer,
     String,
@@ -18,34 +17,28 @@ from datetime import datetime
 databaseURL = 'sqlite:///studentsData.db'
 Base = declarative_base()
 engine = create_engine(databaseURL)
+date = datetime.now().strftime("%x")
 
 class Students(Base):
     __tablename__ = "Students"
     StudentID = Column(Integer, primary_key=True)
-    # Date = Column(DateTime, primary_key=True)
+    Date = Column(String, primary_key=True)
     Period = Column(String, primary_key=True)
-    Name = Column(String)
-    # Present = Column(Boolean)
+    Present = Column(Boolean)
 
 # Set up SQLite database
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-session.execute(text("TRUNCATE TABLE Students"))
+session.query(Students).delete()
 session.commit()
 
-users = Students(StudentID = 123, Period = "3A", Name = "Bob") #type: ignore
-session.add(users)
-users = Students(StudentID = 456, Period = "3A", Name = "Dob") #type: ignore
-session.add(users)
-users = Students(StudentID = 789, Period = "3A", Name = "Pob") #type: ignore
-session.add(users)
+user = str(input("What Student ID: "))
+period = str(input("What period: "))
+
+log = Students(StudentID = user, Date = date, Period = period, Present = True)
+session.add(log)
 session.commit()
 
-user = str(input("what Student ID: "))
-if(user == session.query(Students).filter_by(studentID = user)):
-    print("working")
-    #Log student
-
-session.close() #type: ignore
+session.close()
