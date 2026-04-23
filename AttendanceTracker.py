@@ -64,7 +64,7 @@ def seed_data():
 
     if session.query(Student).count() == 0:
         students = [
-            Student(barcode="1001", name="Alice Johnson"),
+            Student(barcode="996701", name="Sean Evans"),
             Student(barcode="1002", name="Brian Smith"),
             Student(barcode="1003", name="Carlos Lee"),
         ]
