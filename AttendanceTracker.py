@@ -47,7 +47,7 @@ class Attendance(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
     class_id = Column(Integer, ForeignKey("classes.id"), nullable=False)
-    timestamp = Column(DateTime, default=datetime.now().strftime("%x"))
+    timestamp = Column(String, default=datetime.now().strftime("%x"))
 
     student = relationship("Student", back_populates="attendance_records")
     class_ = relationship("Class", back_populates="attendance_records")
