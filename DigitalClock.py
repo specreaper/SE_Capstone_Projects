@@ -478,7 +478,8 @@ def main():
         manage_timer_time()
         first_5_mins = is_first_5_mins()
 
-        # Checks for if its a new day and if it is reconnects to wifi and syncs up with ntp time again
+        # Checks for if its a new day 
+        # If it is it reconnects to wifi and syncs up with ntp time again
         if(time.localtime().tm_mday != last_date_update):
             connect_wifi()
             restart_listening_socket()
