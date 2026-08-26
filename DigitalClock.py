@@ -163,28 +163,28 @@ def set_schedule():
     
     #Checks if daytype is a Regular Bell Schedule and sets it up if it is
     if daytype == 1:
-        bell_times =        ["8:00", "9:24", "9:29", "9:59", "10:04", "11:27", "11:32" 
-                            , "12:55", "13:35", "13:40", "15:00"]
-        class_start_times = ["8:00",         "9:29",         "10:04",          "11:32" 
-                                             , "13:40"]
+        bell_times =        ["8:00", "9:24", "9:30", "9:58", "10:04", "11:26", "11:32" 
+                            , "12:55", "13:35", "13:41", "15:00"]
+        class_start_times = ["8:00",         "9:30",         "10:04",          "11:32" 
+                                             , "13:41"]
         if not btn_up.value:
             MESSAGES = ["Regular Bell Schedule"]
 
     #Checks if daytype is a Early Release Schedule and sets it up if it is
     if daytype == 2:
-        bell_times =        ["8:00", "9:05", "9:10", "10:15", "10:20", "11:25", "11:30"
-                            , "12:05", "12:50"]
+        bell_times =        ["8:00", "9:04", "9:10", "10:14", "10:20", "11:25", "11:30"
+                            , "12:06", "12:50"]
         class_start_times = ["8:00",         "9:10",          "10:20",          "11:30"
-                            , "12:05"]
+                            , "12:06"]
         if not btn_up.value:
             MESSAGES = ["Early Release Schedule"] 
 
     #Checks if daytype is a 2-Hour Delay Schedule and sets it up if it is
     if daytype == 3:
-        bell_times =        ["10:00", "11:00", "11:05", "11:35", "11:40", "12:30", "12:35"
-                            , "13:30", "13:35", "14:10", "15:00"]
-        class_start_times = ["10:00",          "11:05",          "11:40",          "12:35"
-                                              , "14:10"]
+        bell_times =        ["10:00", "11:00", "11:06", "11:34", "11:40", "12:29", "12:35"
+                            , "13:30", "13:35", "14:11", "15:00"]
+        class_start_times = ["10:00",          "11:06",          "11:40",          "12:35"
+                                              , "14:11"]
         if not btn_up.value:
             MESSAGES = ["2-Hour Delay Schedule"] 
     
@@ -536,7 +536,7 @@ def main():
         # If 1 use Chris's prefered format
         elif(clock_format == 1): 
             matrixportal.set_text("           ", 2)
-            matrixportal.set_text("ict.gctaa", 0)
+            matrixportal.set_text("Happy First Day!", 0)
             #matrixportal.set_text(str(is_filesystem_writable()), 0)
             
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
