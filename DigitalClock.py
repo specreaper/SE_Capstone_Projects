@@ -536,7 +536,7 @@ def main():
         # If 1 use Chris's prefered format
         elif(clock_format == 1): 
             matrixportal.set_text("           ", 2)
-            matrixportal.set_text("Happy First Day!", 0)
+            matrixportal.set_text("ict.gctaa.net", 0)
             #matrixportal.set_text(str(is_filesystem_writable()), 0)
             
             matrixportal.set_text_color(random.choice(list(COLORS.values())))
