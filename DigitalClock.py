@@ -248,26 +248,48 @@ def is_first_5_mins():
         return -1
 
 
-def connect_wifi():
+def get_wifi_networks():
+    # Default network first, then HOME_WIFI, then FALLBACK_WIFI_SSID_1, _2, ... in order
+    networks = []
+    for prefix in ("CIRCUITPY_WIFI", "HOME_WIFI"):
+        ssid = os.getenv(prefix + "_SSID")
+        if ssid:
+            networks.append((ssid, os.getenv(prefix + "_PASSWORD")))
+    i = 1
+    while os.getenv("FALLBACK_WIFI_SSID_" + str(i)):
+        networks.append((os.getenv("FALLBACK_WIFI_SSID_" + str(i)), os.getenv("FALLBACK_WIFI_PASSWORD_" + str(i))))
+        i += 1
+    return networks
+
+
+def connect_wifi(retry_forever=True):
     global pool
 
-    # Connect to WiFi using settings.toml credentials
+    # Try each network until one connects AND can reach the time server
+    # (a network can hand out an IP but still have broken DNS / no internet)
+    # Returns True once time is synced, False if every network failed and retry_forever is off
     print("Connecting to WiFi...")
-    isConnected = False
-    while not isConnected:
-        try:
-            wifi.radio.connect(
-                os.getenv("CIRCUITPY_WIFI_SSID"), os.getenv("CIRCUITPY_WIFI_PASSWORD")
-            )
-            isConnected = True
-        except:
-            wifi.radio.connect(
-                os.getenv("HOME_WIFI_SSID"), os.getenv("HOME_WIFI_PASSWORD")
-            )
-            isConnected = True
-    print("Connected to WiFi!")
-    print("IP:", wifi.radio.ipv4_address)
-    pool = socketpool.SocketPool(wifi.radio)
+    networks = get_wifi_networks()
+    while True:
+        for ssid, password in networks:
+            try:
+                print("Trying", ssid)
+                try:
+                    wifi.radio.stop_station()
+                except Exception:
+                    pass
+                wifi.radio.connect(ssid, password)
+            except Exception as e:
+                print("Failed to connect to", ssid, ":", e)
+                continue
+            print("Connected to", ssid, "IP:", wifi.radio.ipv4_address)
+            pool = socketpool.SocketPool(wifi.radio)
+            if sync_ntp_time():
+                return True
+            print(ssid, "can't reach the time server, trying next network")
+        if not retry_forever:
+            return False
+        time.sleep(5)
 
 
 def setting_up_listening_socket():
@@ -330,8 +352,10 @@ def sync_ntp_time():
         # Update board's RTC
         rtc.RTC().datetime = ntp.datetime
         print("Time synced successfully via NTP!")
+        return True
     except Exception as e:
         print("Failed to sync time:", e)
+        return False
 
 def get_timezone_offset():
     # Calculate timezone offset in hours
@@ -456,11 +480,10 @@ def main():
     global moving_message_update
     global MESSAGES
 
-    # Initial setup
+    # Initial setup (connect_wifi also syncs the time)
     connect_wifi()
     setting_up_listening_socket()
-    sync_ntp_time()
-    setup_display()    
+    setup_display()
     writeable_reset()
 
     print("Listening on: ", wifi.radio.ipv4_address, " port: ", 1111)
@@ -481,10 +504,10 @@ def main():
         # Checks for if its a new day 
         # If it is it reconnects to wifi and syncs up with ntp time again
         if(time.localtime().tm_mday != last_date_update):
-            connect_wifi()
+            # One pass only so the clock keeps running on its current time if every network fails
+            connect_wifi(retry_forever=False)
             restart_listening_socket()
             writeable_reset()
-            sync_ntp_time()
             last_date_update = time.localtime().tm_mday
             print("Resynced")
         
