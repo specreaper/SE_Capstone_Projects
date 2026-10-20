@@ -344,17 +344,44 @@ def poll_for_update_request():
     remote_update()
     
 
-def sync_ntp_time():
-    # Sync time using NTP server directly
-    try:
-        ntp = adafruit_ntp.NTP(pool, tz_offset=get_timezone_offset())
+NTP_SERVERS = ("0.adafruit.pool.ntp.org", "time.google.com", "time.cloudflare.com")
+HTTP_TIME_URL = "http://www.google.com"
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
-        # Update board's RTC
-        rtc.RTC().datetime = ntp.datetime
-        print("Time synced successfully via NTP!")
+
+def sync_ntp_time():
+    # Sync time using NTP servers, falling back to an HTTP Date header
+    # (some networks block NTP's UDP port 123 but allow normal web traffic)
+    for server in NTP_SERVERS:
+        try:
+            ntp = adafruit_ntp.NTP(pool, server=server, tz_offset=get_timezone_offset(), socket_timeout=5)
+
+            # Update board's RTC
+            rtc.RTC().datetime = ntp.datetime
+            print("Time synced successfully via NTP from", server)
+            return True
+        except Exception as e:
+            print("Failed to sync time from", server, ":", e)
+    return sync_http_time()
+
+
+def sync_http_time():
+    # Read the time from a web server's Date header, e.g. "Tue, 20 Oct 2026 14:03:00 GMT"
+    try:
+        requests = adafruit_requests.Session(pool, ssl.create_default_context())
+        r = requests.head(HTTP_TIME_URL, timeout=10)
+        try:
+            date = [v for k, v in r.headers.items() if k.lower() == "date"][0]
+        finally:
+            r.close()
+        _, day, mon, year, hms, _ = date.split(" ")
+        hour, minute, sec = (int(x) for x in hms.split(":"))
+        utc = time.mktime((int(year), MONTHS.index(mon) + 1, int(day), hour, minute, sec, 0, -1, -1))
+        rtc.RTC().datetime = time.localtime(utc + get_timezone_offset() * 3600)
+        print("Time synced successfully via HTTP Date header:", date)
         return True
     except Exception as e:
-        print("Failed to sync time:", e)
+        print("Failed to sync time via HTTP:", e)
         return False
 
 def get_timezone_offset():
